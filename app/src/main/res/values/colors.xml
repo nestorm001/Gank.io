@@ -7,4 +7,8 @@
     <color name="Transparent">#00000000</color>
     <color name="White">#FFFFFF</color>
     <color name="line_color">#e0e0e0</color>
+    <color name="Text_1">#333536</color>
+    <color name="Text_2">#7a7a7a</color>
+    <color name="Text_3">#aaaaaa</color>
+    <color name="Primary">#2196F3</color>
 </resources>
