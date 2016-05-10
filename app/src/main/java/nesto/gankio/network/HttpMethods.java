@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import nesto.gankio.BuildConfig;
 import nesto.gankio.global.Host;
+import nesto.gankio.model.Results;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -18,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -27,7 +29,7 @@ import rx.schedulers.Schedulers;
 public class HttpMethods {
 
     public static final String BASE_URL = Host.HOST;
-    private static final int DEFAULT_TIMEOUT = 20;
+    private static final int DEFAULT_TIMEOUT = 30;
 
     private NetworkService networkService;
 
@@ -103,5 +105,15 @@ public class HttpMethods {
                         .observeOn(AndroidSchedulers.mainThread());
             }
         };
+    }
+
+    public void getData(Action1<Results> onNext, Action1<Throwable> onError, String type,
+                                Integer num, Integer page) {
+        //可根据需要设置分页
+        Subscription subscription = networkService.getData(type, num, page)
+                .map(new HttpResultFunc<Results>())
+                .compose(this.<Results>setThreads())
+                .subscribe(onNext, onError);
+//        addRequest(HttpRequest.GET_DATA, subscription);
     }
 }

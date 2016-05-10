@@ -7,18 +7,18 @@ import com.google.gson.annotations.SerializedName;
  * By nesto
  */
 public enum DataType {
-    @SerializedName("iOS")
-    IOS("iOS"),
-    @SerializedName("Android")
-    ANDROID("Android"),
-    @SerializedName("瞎推荐")
-    RECOMMEND("瞎推荐"),
     @SerializedName("福利")
     BENEFIT("福利"),
     @SerializedName("休息视频")
     VIDEO("休息视频"),
     @SerializedName("拓展资源")
-    RESOURCE("拓展资源");
+    RESOURCE("拓展资源"),
+    @SerializedName("瞎推荐")
+    RECOMMEND("瞎推荐"),
+    @SerializedName("Android")
+    ANDROID("Android"),
+    @SerializedName("iOS")
+    IOS("iOS");
 
     private String name;
 

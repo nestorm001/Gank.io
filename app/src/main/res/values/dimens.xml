@@ -8,7 +8,5 @@
     <dimen name="line_width">1px</dimen>
     <dimen name="normal_text_size">16dp</dimen>
 
-    <dimen name="card_height">304dp</dimen>
-    <dimen name="card_image_height">200dp</dimen>
-    <dimen name="card_title_height">160dp</dimen>
+    <dimen name="card_height">100dp</dimen>
 </resources>

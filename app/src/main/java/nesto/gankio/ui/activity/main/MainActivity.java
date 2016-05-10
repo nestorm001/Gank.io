@@ -14,6 +14,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import nesto.gankio.R;
+import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.ui.fragment.normal.NormalFragment;
 
@@ -55,12 +56,9 @@ public class MainActivity extends ActionBarActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         final Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new NormalFragment(), "1");
-        adapter.addFragment(new NormalFragment(), "2");
-        adapter.addFragment(new NormalFragment(), "3");
-        adapter.addFragment(new NormalFragment(), "4");
-        adapter.addFragment(new NormalFragment(), "5");
-        adapter.addFragment(new NormalFragment(), "6");
+        for (DataType type : DataType.values()) {
+            adapter.addFragment(new NormalFragment().setType(type), type.toString());
+        }
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

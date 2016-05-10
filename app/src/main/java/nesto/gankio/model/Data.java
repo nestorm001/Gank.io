@@ -1,5 +1,7 @@
 package nesto.gankio.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created on 2016/5/9.
  * By nesto
@@ -15,8 +17,10 @@ public class Data {
 //    who: "张涵宇"
 
     private String _id;
+    @SerializedName("createdAt")
     private String createdAt;
     private String desc;
+    @SerializedName("publishedAt")
     private String publishedAt;
     private String type;
     private String url;

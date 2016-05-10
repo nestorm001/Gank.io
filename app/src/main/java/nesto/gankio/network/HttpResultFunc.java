@@ -11,6 +11,7 @@ import java.net.SocketTimeoutException;
 import nesto.gankio.R;
 import nesto.gankio.global.Nesto;
 import nesto.gankio.util.ConnectionState;
+import nesto.gankio.util.LogUtil;
 import retrofit2.Response;
 import retrofit2.adapter.rxjava.Result;
 import rx.functions.Func1;
@@ -27,6 +28,7 @@ public class HttpResultFunc<T> implements Func1<Result<T>, T> {
     public T call(Result<T> httpResult) {
         if (httpResult.isError()) {
             handleInternetError(httpResult.error());
+            LogUtil.d(httpResult.error().getLocalizedMessage());
         }
         Response<T> response = httpResult.response();
         if (!response.isSuccessful()) {
