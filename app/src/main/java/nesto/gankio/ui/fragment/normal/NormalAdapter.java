@@ -73,10 +73,14 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void initItemView(final int position, NormalViewHolder viewHolder) {
         Data data = list.get(position);
         if (data.getType().equals(DataType.BENEFIT.toString())) {
+            viewHolder.title.setVisibility(View.GONE);
+            viewHolder.text.setVisibility(View.GONE);
             Picasso.with(context)
                     .load(data.getUrl())
                     .into(viewHolder.image);
         } else {
+            viewHolder.title.setVisibility(View.VISIBLE);
+            viewHolder.text.setVisibility(View.VISIBLE);
             viewHolder.title.setText(data.getDesc());
             viewHolder.text.setText(data.getWho());
         }

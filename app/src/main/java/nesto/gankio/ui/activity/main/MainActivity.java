@@ -2,14 +2,8 @@ package nesto.gankio.ui.activity.main;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        final Adapter adapter = new Adapter(getSupportFragmentManager());
+        final MainFragmentAdapter adapter = new MainFragmentAdapter(getSupportFragmentManager());
         for (DataType type : DataType.values()) {
             adapter.addFragment(new NormalFragment().setType(type), type.toString());
         }
@@ -79,34 +73,5 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         viewPager.setCurrentItem(0);
-    }
-
-    private class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> fragmentList = new ArrayList<>();
-        private final List<String> fragmentTitleList = new ArrayList<>();
-
-        public Adapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            fragmentList.add(fragment);
-            fragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitleList.get(position);
-        }
     }
 }

@@ -51,8 +51,10 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        swipeRefreshLayout.setColorSchemeColors(R.color.colorPrimary, R.color.colorPrimaryDark);
+        swipeRefreshLayout.setOnRefreshListener(this);
         setListener();
-        return recyclerView;
+        return view;
     }
 
     @Override
@@ -94,7 +96,6 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                LogUtil.d("lastVisibleItem " + lastVisibleItem);
                 NormalAdapter adapter = (NormalAdapter) recyclerView.getAdapter();
                 if (lastVisibleItem >= adapter.getItemCount() - 5
                         && adapter.getItemCount() > 0) {
@@ -108,6 +109,7 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onRefresh() {
+        LogUtil.d("onRefresh");
         pageNum = 0;
         ((NormalAdapter) recyclerView.getAdapter()).clearData();
         getData();
