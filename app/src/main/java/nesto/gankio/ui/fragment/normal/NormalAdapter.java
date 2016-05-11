@@ -1,6 +1,9 @@
 package nesto.gankio.ui.fragment.normal;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +74,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void initItemView(final int position, NormalViewHolder viewHolder) {
-        Data data = list.get(position);
+        final Data data = list.get(position);
         if (data.getType().equals(DataType.BENEFIT.toString())) {
             viewHolder.title.setVisibility(View.GONE);
             viewHolder.text.setVisibility(View.GONE);
@@ -83,11 +86,21 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             viewHolder.text.setVisibility(View.VISIBLE);
             viewHolder.title.setText(data.getDesc());
             viewHolder.text.setText(data.getWho());
+            viewHolder.item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uri = Uri.parse(data.getUrl());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
     public class NormalViewHolder extends RecyclerView.ViewHolder {
 
+        @Bind(R.id.card_view)
+        CardView item;
         @Bind(R.id.image)
         ImageView image;
         @Bind(R.id.title)

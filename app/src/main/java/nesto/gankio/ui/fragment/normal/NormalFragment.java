@@ -18,7 +18,6 @@ import nesto.gankio.model.DataType;
 import nesto.gankio.model.Results;
 import nesto.gankio.network.ErrorHandlerHelper;
 import nesto.gankio.network.HttpMethods;
-import nesto.gankio.util.LogUtil;
 import rx.functions.Action1;
 
 /**
@@ -34,8 +33,14 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private DataType type;
 
+    private NormalAdapter adapter;
+
     private int pageNum = 0;
     private boolean isRefreshing = false;
+    //控件是否已经初始化
+    private boolean isCreateView = false;
+    //是否已经加载过数据
+    private boolean isLoadData = false;
 
     public NormalFragment setType(DataType type) {
         this.type = type;
@@ -43,27 +48,56 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter = new NormalAdapter(getActivity());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recycler_view, container, false);
         ButterKnife.bind(this, view);
-        NormalAdapter adapter = new NormalAdapter(container.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        swipeRefreshLayout.setColorSchemeColors(R.color.colorPrimary, R.color.colorPrimaryDark);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
         swipeRefreshLayout.setOnRefreshListener(this);
         setListener();
+        isCreateView = true;
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        NormalAdapter adapter = (NormalAdapter) recyclerView.getAdapter();
-        if (adapter.getItemCount() == 0) {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isCreateView) {
+            lazyLoad();
+        }
+    }
+
+    private void lazyLoad() {
+        //如果没有加载过就加载，否则就不再加载了
+        if (!isLoadData) {
+            //加载数据操作
+            isLoadData = true;
             getData();
         }
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getUserVisibleHint()) {
+            lazyLoad();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     private void getData() {
@@ -109,7 +143,6 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onRefresh() {
-        LogUtil.d("onRefresh");
         pageNum = 0;
         ((NormalAdapter) recyclerView.getAdapter()).clearData();
         getData();
