@@ -2,7 +2,6 @@ package nesto.gankio.ui.fragment.normal;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,8 +18,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import nesto.gankio.R;
 import nesto.gankio.global.C;
+import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
+import nesto.gankio.ui.activity.content.ContentActivity;
+import nesto.gankio.ui.activity.video.VideoActivity;
 
 /**
  * Created on 2016/5/9.
@@ -89,8 +91,9 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             viewHolder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri uri = Uri.parse(data.getUrl());
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    Intent intent = data.getType().equals(DataType.VIDEO.toString()) ?
+                            new Intent(context, VideoActivity.class).putExtra(Intents.TRANS_DATA, data)
+                            : new Intent(context, ContentActivity.class).putExtra(Intents.TRANS_DATA, data);
                     context.startActivity(intent);
                 }
             });

@@ -1,12 +1,15 @@
 package nesto.gankio.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created on 2016/5/9.
  * By nesto
  */
-public class Data {
+public class Data implements Parcelable {
 //    _id: "56cc6d23421aa95caa707c56",
 //    createdAt: "2015-08-07T01:21:33.518Z",
 //    desc: "8.7——（2）",
@@ -83,4 +86,44 @@ public class Data {
                 ", used=" + used +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this._id);
+        dest.writeString(this.createdAt);
+        dest.writeString(this.desc);
+        dest.writeString(this.publishedAt);
+        dest.writeString(this.type);
+        dest.writeString(this.url);
+        dest.writeString(this.who);
+        dest.writeByte(this.used ? (byte) 1 : (byte) 0);
+    }
+
+    protected Data(Parcel in) {
+        this._id = in.readString();
+        this.createdAt = in.readString();
+        this.desc = in.readString();
+        this.publishedAt = in.readString();
+        this.type = in.readString();
+        this.url = in.readString();
+        this.who = in.readString();
+        this.used = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
+        @Override
+        public Data createFromParcel(Parcel source) {
+            return new Data(source);
+        }
+
+        @Override
+        public Data[] newArray(int size) {
+            return new Data[size];
+        }
+    };
 }
