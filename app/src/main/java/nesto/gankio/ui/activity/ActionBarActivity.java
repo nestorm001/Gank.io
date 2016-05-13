@@ -40,6 +40,7 @@ public abstract class ActionBarActivity extends BaseActivity {
     public void showOnBack() {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_action_close);
         }
     }
 

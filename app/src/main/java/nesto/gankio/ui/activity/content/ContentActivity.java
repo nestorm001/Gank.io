@@ -1,6 +1,7 @@
 package nesto.gankio.ui.activity.content;
 
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -32,6 +33,8 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     ImageView image;
     @Bind(R.id.progress)
     ProgressBar progressBar;
+    @Bind(R.id.scroll)
+    NestedScrollView scrollView;
 
     private Data data;
 
@@ -74,6 +77,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
+                scrollView.scrollTo(0, 0);
                 return true;
             }
         });
