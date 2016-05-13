@@ -4,12 +4,15 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import nesto.gankio.BuildConfig;
 import nesto.gankio.global.Host;
+import nesto.gankio.model.Data;
+import nesto.gankio.model.DataType;
 import nesto.gankio.model.Results;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -20,6 +23,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -108,11 +112,29 @@ public class HttpMethods {
     }
 
     public void getData(Action1<Results> onNext, Action1<Throwable> onError, String type,
-                                Integer num, Integer page) {
+                        Integer num, Integer page) {
         //可根据需要设置分页
         Subscription subscription = networkService.getData(type, num, page)
                 .map(new HttpResultFunc<Results>())
                 .compose(this.<Results>setThreads())
+                .subscribe(onNext, onError);
+//        addRequest(HttpRequest.GET_DATA, subscription);
+    }
+
+    public void getOneRandomPicture(Action1<String> onNext, Action1<Throwable> onError) {
+        Subscription subscription = networkService.getRandom(DataType.BENEFIT.toString(), 1)
+                .map(new HttpResultFunc<Results>())
+                .compose(this.<Results>setThreads())
+                .map(new Func1<Results, String>() {
+                    @Override
+                    public String call(Results results) {
+                        ArrayList<Data> datas = results.getResults();
+                        if (!datas.isEmpty()) {
+                            return datas.get(0).getUrl();
+                        }
+                        return null;
+                    }
+                })
                 .subscribe(onNext, onError);
 //        addRequest(HttpRequest.GET_DATA, subscription);
     }

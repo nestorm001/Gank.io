@@ -18,4 +18,8 @@ public interface NetworkService {
             @Path("num") Integer num,
             @Path("page") Integer page);
 
+    @GET("random/data/{type}/{num}")
+    Observable<Result<Results>>
+    getRandom(@Path("type") String type,
+              @Path("num") Integer num);
 }
