@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import nesto.gankio.BuildConfig;
@@ -122,7 +123,8 @@ public class HttpMethods {
     }
 
     public void getOneRandomPicture(Action1<String> onNext, Action1<Throwable> onError) {
-        Subscription subscription = networkService.getRandom(DataType.BENEFIT.toString(), 1)
+        final int loadNum = 10;
+        Subscription subscription = networkService.getRandom(DataType.BENEFIT.toString(), loadNum)
                 .map(new HttpResultFunc<Results>())
                 .compose(this.<Results>setThreads())
                 .map(new Func1<Results, String>() {
@@ -130,7 +132,7 @@ public class HttpMethods {
                     public String call(Results results) {
                         ArrayList<Data> datas = results.getResults();
                         if (!datas.isEmpty()) {
-                            return datas.get(0).getUrl();
+                            return datas.get(new Random().nextInt(loadNum)).getUrl();
                         }
                         return null;
                     }

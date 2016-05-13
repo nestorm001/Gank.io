@@ -1,8 +1,14 @@
 package nesto.gankio.ui.activity.content;
 
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.squareup.picasso.Picasso;
 
@@ -24,6 +30,8 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     WebView webView;
     @Bind(R.id.image)
     ImageView image;
+    @Bind(R.id.progress)
+    ProgressBar progressBar;
 
     private Data data;
 
@@ -32,13 +40,48 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTranslucentStatusBar(R.color.Transparent);
         presenter = new ContentPresenter();
         presenter.attachView(this);
         ButterKnife.bind(this);
+        initWebView();
         load();
+        setTitle(data.getType());
         showOnBack();
-        presenter.getRandomPicture();
-        setTranslucentStatusBar(R.color.Transparent);
+    }
+
+    @Override
+    public void setContentView() {
+        setContentView(R.layout.activity_content);
+    }
+
+    private void initWebView() {
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                progressBar.setProgress(newProgress);
+                progressBar.setVisibility(newProgress == 100 ? View.GONE : View.VISIBLE);
+            }
+
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                setTitle(title);
+            }
+        });
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);  //设置 缓存模式
+        settings.setDatabaseEnabled(true);
+        settings.setAppCacheEnabled(true);
     }
 
     private void load() {
@@ -46,11 +89,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         if (data != null) {
             webView.loadUrl(data.getUrl());
         }
-    }
-
-    @Override
-    public void setContentView() {
-        setContentView(R.layout.activity_content);
+        presenter.getRandomPicture();
     }
 
     @Override
@@ -64,5 +103,27 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         Picasso.with(this)
                 .load(url)
                 .into(image);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (webView.canGoBack()) {
+            //可以后退，暂时不需要
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

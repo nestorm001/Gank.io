@@ -3,13 +3,14 @@ package nesto.gankio.ui.activity;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.ViewParent;
 import android.view.WindowManager;
 
 import nesto.gankio.R;
-import nesto.gankio.util.LogUtil;
 
 /**
  * Created on 2016/4/26.
@@ -17,7 +18,7 @@ import nesto.gankio.util.LogUtil;
  */
 public abstract class ActionBarActivity extends BaseActivity {
 
-    private ActionBar actionBar;
+    protected ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +60,15 @@ public abstract class ActionBarActivity extends BaseActivity {
     }
 
     public void setTitle(String title) {
-        LogUtil.d(title);
         if (actionBar != null && title != null) {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                ViewParent view = toolbar.getParent();
+                if (view instanceof CollapsingToolbarLayout) {
+                    ((CollapsingToolbarLayout) view).setTitle(title);
+                    return;
+                }
+            }
             actionBar.setTitle(title);
         }
     }

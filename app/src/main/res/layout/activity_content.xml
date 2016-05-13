@@ -20,8 +20,11 @@
 
             <ProgressBar
                 android:id="@+id/progress"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="5dp" />
+                android:layout_height="5dp"
+                
+                android:max="100" />
         </WebView>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
