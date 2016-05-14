@@ -18,7 +18,6 @@ import nesto.gankio.model.DataType;
 import nesto.gankio.model.Results;
 import nesto.gankio.network.ErrorHandlerHelper;
 import nesto.gankio.network.HttpMethods;
-import nesto.gankio.util.LogUtil;
 import rx.functions.Action1;
 
 /**
@@ -50,7 +49,6 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        LogUtil.d(type + " onCreate");
         super.onCreate(savedInstanceState);
         adapter = new NormalAdapter(getActivity());
     }
@@ -58,7 +56,6 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        LogUtil.d(type + " onCreateView");
         View view = inflater.inflate(R.layout.recycler_view, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setAdapter(adapter);
@@ -73,7 +70,6 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        LogUtil.d(type + " setUserVisibleHint" + " isVisibleToUser " + isVisibleToUser);
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isCreateView) {
             lazyLoad();
@@ -92,7 +88,6 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        LogUtil.d(type + " onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         if (getUserVisibleHint()) {
             lazyLoad();

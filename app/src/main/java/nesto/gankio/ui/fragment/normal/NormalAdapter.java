@@ -2,21 +2,17 @@ package nesto.gankio.ui.fragment.normal;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import nesto.gankio.R;
+import nesto.gankio.db.DBHelper;
 import nesto.gankio.global.C;
 import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
@@ -30,10 +26,10 @@ import nesto.gankio.ui.activity.video.VideoActivity;
  */
 public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
+    protected Context context;
 
-    private ArrayList<Data> list;
-    private boolean hasMore = true;
+    protected ArrayList<Data> list;
+    protected boolean hasMore = true;
 
     public NormalAdapter(Context context) {
         this.context = context;
@@ -75,7 +71,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         initItemView(position, (NormalViewHolder) viewHolder);
     }
 
-    private void initItemView(final int position, NormalViewHolder viewHolder) {
+    protected void initItemView(final int position, final NormalViewHolder viewHolder) {
         final Data data = list.get(position);
         if (data.getType().equals(DataType.BENEFIT.toString())) {
             viewHolder.title.setVisibility(View.GONE);
@@ -91,44 +87,61 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             viewHolder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = data.getType().equals(DataType.VIDEO.toString()) ?
-                            new Intent(context, VideoActivity.class).putExtra(Intents.TRANS_DATA, data)
-                            : new Intent(context, ContentActivity.class).putExtra(Intents.TRANS_DATA, data);
-                    context.startActivity(intent);
+                    onItemClicked(data);
                 }
             });
+            setFavourite(viewHolder);
         }
         viewHolder.item.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Intent share = new Intent(Intent.ACTION_SEND)
-                        .putExtra(Intent.EXTRA_TEXT, data.getUrl())
-                        .setType("text/html");
-                context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
+                onItemLongClicked(data);
                 return true;
             }
         });
-    }
-
-    public class NormalViewHolder extends RecyclerView.ViewHolder {
-
-        @Bind(R.id.card_view)
-        CardView item;
-        @Bind(R.id.image)
-        ImageView image;
-        @Bind(R.id.title)
-        TextView title;
-        @Bind(R.id.text)
-        TextView text;
-
-        public NormalViewHolder(View convertView) {
-            super(convertView);
-            ButterKnife.bind(this, convertView);
-        }
+        viewHolder.favourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFavouriteClicked(data, viewHolder);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    private void onItemClicked(Data data) {
+        Intent intent = data.getType().equals(DataType.VIDEO.toString()) ?
+                new Intent(context, VideoActivity.class).putExtra(Intents.TRANS_DATA, data)
+                : new Intent(context, ContentActivity.class).putExtra(Intents.TRANS_DATA, data);
+        context.startActivity(intent);
+    }
+
+    private void onItemLongClicked(Data data) {
+        Intent share = new Intent(Intent.ACTION_SEND)
+                .putExtra(Intent.EXTRA_TEXT, data.getUrl())
+                .setType("text/html");
+        context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
+    }
+
+    private void onFavouriteClicked(Data data, NormalViewHolder viewHolder) {
+        if (viewHolder.isExist()) {
+            DBHelper.getInstance().remove(data);
+            viewHolder.setExist(false);
+        } else {
+            DBHelper.getInstance().add(data);
+            viewHolder.setExist(true);
+        }
+        setFavourite(viewHolder);
+    }
+
+    private void setFavourite(NormalViewHolder viewHolder) {
+        if (viewHolder.isExist()) {
+            viewHolder.favourite.setImageResource(R.drawable.ic_action_favourited);
+        } else {
+            viewHolder.favourite.setImageResource(R.drawable.ic_action_favourite);
+        }
     }
 }
