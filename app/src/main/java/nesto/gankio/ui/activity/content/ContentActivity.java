@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -64,7 +65,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
                 progressBar.setProgress(newProgress);
-                progressBar.setVisibility(newProgress == 100 ? View.GONE : View.VISIBLE);
+                progressBar.setVisibility(progressBar.getProgress() == 100 ? View.GONE : View.VISIBLE);
             }
 
             @Override
@@ -86,6 +87,8 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);  //设置 缓存模式
         settings.setDatabaseEnabled(true);
         settings.setAppCacheEnabled(true);
+        
+        progressBar.setInterpolator(new LinearInterpolator());
     }
 
     private void load() {

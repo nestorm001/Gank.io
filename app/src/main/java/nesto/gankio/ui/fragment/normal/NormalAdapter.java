@@ -98,6 +98,16 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
         }
+        viewHolder.item.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent share = new Intent(Intent.ACTION_SEND)
+                        .putExtra(Intent.EXTRA_TEXT, data.getUrl())
+                        .setType("text/html");
+                context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
+                return true;
+            }
+        });
     }
 
     public class NormalViewHolder extends RecyclerView.ViewHolder {

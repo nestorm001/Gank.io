@@ -10,4 +10,10 @@
     <string name="cannot_connect_to_server">无法连接到服务器</string>
     <!--dialog-->
     <string name="load_data_ing">数据加载中……</string>
+    
+    <!--menu-->
+    <string name="favourite">收藏列表</string>
+    
+    
+    <string name="send_to">发送到</string>
 </resources>
