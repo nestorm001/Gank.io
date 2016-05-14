@@ -61,21 +61,26 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
     }
 
     private void loadData() {
-        DBHelper.getInstance()
-                .getAll()
-                .subscribe(new Action1<ArrayList<Data>>() {
-                    @Override
-                    public void call(ArrayList<Data> datas) {
-                        //TODO
-                        LogUtil.d(datas.toString());
-                        adapter.add(datas);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        //TODO
-                    }
-                });
+        if (DBHelper.getInstance().getFavouriteList().isEmpty()) {
+            DBHelper.getInstance()
+                    .getAll()
+                    .subscribe(new Action1<ArrayList<Data>>() {
+                        @Override
+                        public void call(ArrayList<Data> datas) {
+                            //TODO
+                            LogUtil.d(datas.toString());
+                            adapter.add(datas);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            //TODO
+                        }
+                    });
+        } else {
+            adapter.add(DBHelper.getInstance().getFavouriteList());
+        }
+
     }
 
     @Override

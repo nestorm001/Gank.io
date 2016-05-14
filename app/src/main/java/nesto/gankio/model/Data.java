@@ -29,6 +29,7 @@ public class Data implements Parcelable {
     private String url;
     private String who;
     private boolean used;
+    private boolean favoured = false;
 
     public Data(String _id, String createdAt, String desc, String publishedAt, String type, String url, String who, boolean used) {
         this._id = _id;
@@ -73,18 +74,25 @@ public class Data implements Parcelable {
         return used;
     }
 
+    public boolean isFavoured() {
+        return favoured;
+    }
+
+    public void setFavoured(boolean favoured) {
+        this.favoured = favoured;
+    }
+
     @Override
-    public String toString() {
-        return "Data{" +
-                "_id='" + _id + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", desc='" + desc + '\'' +
-                ", publishedAt='" + publishedAt + '\'' +
-                ", type='" + type + '\'' +
-                ", url='" + url + '\'' +
-                ", who='" + who + '\'' +
-                ", used=" + used +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Data data = (Data) o;
+        return _id.equals(data._id);
+    }
+
+    @Override
+    public int hashCode() {
+        return _id.hashCode();
     }
 
     @Override
@@ -102,6 +110,7 @@ public class Data implements Parcelable {
         dest.writeString(this.url);
         dest.writeString(this.who);
         dest.writeByte(this.used ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.favoured ? (byte) 1 : (byte) 0);
     }
 
     protected Data(Parcel in) {
@@ -113,9 +122,10 @@ public class Data implements Parcelable {
         this.url = in.readString();
         this.who = in.readString();
         this.used = in.readByte() != 0;
+        this.favoured = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
+    public static final Creator<Data> CREATOR = new Creator<Data>() {
         @Override
         public Data createFromParcel(Parcel source) {
             return new Data(source);
@@ -126,17 +136,4 @@ public class Data implements Parcelable {
             return new Data[size];
         }
     };
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Data data = (Data) o;
-        return _id.equals(data._id);
-    }
-
-    @Override
-    public int hashCode() {
-        return _id.hashCode();
-    }
 }

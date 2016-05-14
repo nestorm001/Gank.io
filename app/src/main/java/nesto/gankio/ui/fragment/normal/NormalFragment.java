@@ -18,6 +18,7 @@ import nesto.gankio.model.DataType;
 import nesto.gankio.model.Results;
 import nesto.gankio.network.ErrorHandlerHelper;
 import nesto.gankio.network.HttpMethods;
+import rx.Subscription;
 import rx.functions.Action1;
 
 /**
@@ -41,6 +42,8 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private boolean isCreateView = false;
     //是否已经加载过数据
     private boolean isLoadData = false;
+
+    private Subscription subscription;
 
     public NormalFragment setType(DataType type) {
         this.type = type;
@@ -73,6 +76,7 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isCreateView) {
             lazyLoad();
+            //TODO 刷新收藏状态
         }
     }
 
@@ -80,8 +84,7 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
         //如果没有加载过就加载，否则就不再加载了
         if (!isLoadData) {
             //加载数据操作
-            isLoadData = true;
-            getData();
+            onRefresh();
         }
     }
 
@@ -98,6 +101,10 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onDestroyView() {
         super.onDestroyView();
         isCreateView = false;
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
+        swipeRefreshLayout.setRefreshing(false);
         ButterKnife.unbind(this);
     }
 
@@ -111,10 +118,11 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 adapter.add(results.getResults());
                 swipeRefreshLayout.setRefreshing(false);
                 isRefreshing = false;
+                isLoadData = true;
             }
         };
         Action1<Throwable> onError = new ErrorHandlerHelper().createOnError(null);
-        HttpMethods.getInstance().getData(onNext, onError, type.toString(), C.LOAD_NUM, ++pageNum);
+        subscription = HttpMethods.getInstance().getData(onNext, onError, type.toString(), C.LOAD_NUM, ++pageNum);
     }
 
     private void setListener() {

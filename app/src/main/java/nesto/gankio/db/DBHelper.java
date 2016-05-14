@@ -60,9 +60,21 @@ public class DBHelper {
         }).compose(HttpMethods.getInstance().setThreads());
     }
 
-    public void remove(Data data) {
-
-        //TODO 
+    public Observable<Object> remove(final Data data) {
+        return Observable.create(new Observable.OnSubscribe<Object>() {
+            @Override
+            public void call(Subscriber<? super Object> subscriber) {
+                favouriteList.remove(data);
+                BriteDatabase.Transaction transaction = db.newTransaction();
+                try {
+                    //TODO order
+                    db.delete(C.FAVOURITE_TABLE, C.ID + " = '" + data.get_id() + "'");
+                    transaction.markSuccessful();
+                } finally {
+                    transaction.end();
+                }
+            }
+        }).compose(HttpMethods.getInstance().setThreads());
     }
 
     public void move(int from, int to) {
@@ -111,5 +123,9 @@ public class DBHelper {
 
     private Data toData(String json) {
         return gson.fromJson(json, Data.class);
+    }
+
+    public ArrayList<Data> getFavouriteList() {
+        return favouriteList;
     }
 }

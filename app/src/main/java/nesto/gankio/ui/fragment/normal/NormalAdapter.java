@@ -20,6 +20,7 @@ import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.content.ContentActivity;
 import nesto.gankio.ui.activity.video.VideoActivity;
 import nesto.gankio.util.AppUtil;
+import nesto.gankio.util.LogUtil;
 import rx.Subscriber;
 
 /**
@@ -52,7 +53,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         hasMore = (list.size() == C.LOAD_NUM);
         notifyDataSetChanged();
     }
-
+        
     public void clearData() {
         list.clear();
         this.hasMore = false;
@@ -79,7 +80,8 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         viewHolder.title.setVisibility(View.GONE);
         viewHolder.text.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
-        setFavourite(viewHolder);
+        data.setFavoured(DBHelper.getInstance().isExist(data));
+        setFavourite(data, viewHolder);
         if (data.getType().equals(DataType.BENEFIT.toString())) {
             viewHolder.image.setVisibility(View.VISIBLE);
             Picasso.with(context)
@@ -131,38 +133,67 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
     }
 
-    private void onFavouriteClicked(Data data, final NormalViewHolder viewHolder) {
-        if (viewHolder.isExist()) {
-            DBHelper.getInstance().remove(data);
-            viewHolder.setExist(false);
+    private void onFavouriteClicked(Data data, NormalViewHolder viewHolder) {
+        if (data.isFavoured()) {
+            removeFromFavourite(data, viewHolder);
+            data.setFavoured(false);
         } else {
-            viewHolder.setExist(true);
-            DBHelper.getInstance()
-                    .add(data)
-                    .subscribe(new Subscriber<Object>() {
-                        @Override
-                        public void onCompleted() {
-                            
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            AppUtil.showToast(context.getString(R.string.fail_to_add_to_favourite));
-                            viewHolder.setExist(false);
-                            setFavourite(viewHolder);
-                        }
-
-                        @Override
-                        public void onNext(Object o) {
-
-                        }
-                    });
-            setFavourite(viewHolder);
+            addToFavourite(data, viewHolder);
+            data.setFavoured(true);
         }
+        setFavourite(data, viewHolder);
     }
 
-    private void setFavourite(NormalViewHolder viewHolder) {
-        if (viewHolder.isExist()) {
+    private void addToFavourite(final Data data, final NormalViewHolder viewHolder) {
+        DBHelper.getInstance()
+                .add(data)
+                .subscribe(new Subscriber<Object>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtil.d(e.getLocalizedMessage());
+                        AppUtil.showToast(context.getString(R.string.fail_to_add_to_favourite));
+                        data.setFavoured(false);
+                        setFavourite(data, viewHolder);
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+                });
+    }
+
+    private void removeFromFavourite(final Data data, final NormalViewHolder viewHolder) {
+        DBHelper.getInstance()
+                .remove(data)
+                .subscribe(new Subscriber<Object>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtil.d(e.getLocalizedMessage());
+                        AppUtil.showToast(context.getString(R.string.fail_to_remove_from_favourite));
+                        data.setFavoured(false);
+                        setFavourite(data, viewHolder);
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+                });
+    }
+
+    private void setFavourite(Data data, NormalViewHolder viewHolder) {
+        if (data.isFavoured()) {
             viewHolder.favourite.setImageResource(R.drawable.ic_action_favourited);
         } else {
             viewHolder.favourite.setImageResource(R.drawable.ic_action_favourite);

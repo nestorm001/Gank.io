@@ -17,5 +17,6 @@
     
     <string name="send_to">发送到</string>
     <string name="fail_to_add_to_favourite">收藏失败</string>
+    <string name="fail_to_remove_from_favourite">取消收藏失败</string>
     <string name="favourite_list">收藏夹</string>
 </resources>

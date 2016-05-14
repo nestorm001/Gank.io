@@ -112,19 +112,17 @@ public class HttpMethods {
         };
     }
 
-    public void getData(Action1<Results> onNext, Action1<Throwable> onError, String type,
-                        Integer num, Integer page) {
-        //可根据需要设置分页
-        Subscription subscription = networkService.getData(type, num, page)
+    public Subscription getData(Action1<Results> onNext, Action1<Throwable> onError, String type,
+                                Integer num, Integer page) {
+        return networkService.getData(type, num, page)
                 .map(new HttpResultFunc<Results>())
                 .compose(this.<Results>setThreads())
                 .subscribe(onNext, onError);
-//        addRequest(HttpRequest.GET_DATA, subscription);
     }
 
-    public void getOneRandomPicture(Action1<String> onNext, Action1<Throwable> onError) {
+    public Subscription getOneRandomPicture(Action1<String> onNext, Action1<Throwable> onError) {
         final int loadNum = 10;
-        Subscription subscription = networkService.getRandom(DataType.BENEFIT.toString(), loadNum)
+        return networkService.getRandom(DataType.BENEFIT.toString(), loadNum)
                 .map(new HttpResultFunc<Results>())
                 .compose(this.<Results>setThreads())
                 .map(new Func1<Results, String>() {
@@ -138,6 +136,5 @@ public class HttpMethods {
                     }
                 })
                 .subscribe(onNext, onError);
-//        addRequest(HttpRequest.GET_DATA, subscription);
     }
 }

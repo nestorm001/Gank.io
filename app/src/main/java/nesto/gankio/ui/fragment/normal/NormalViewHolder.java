@@ -28,18 +28,8 @@ public class NormalViewHolder extends RecyclerView.ViewHolder {
     @Bind(R.id.favourite)
     public ImageButton favourite;
 
-    private boolean isExist = false;
-
     public NormalViewHolder(View convertView) {
         super(convertView);
         ButterKnife.bind(this, convertView);
-    }
-
-    public boolean isExist() {
-        return isExist;
-    }
-
-    public void setExist(boolean exist) {
-        isExist = exist;
     }
 }

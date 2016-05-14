@@ -22,7 +22,7 @@ public class A extends Application {
         super.onCreate();
         instance = this;
     }
-
+    
     public static A getInstance() {
         return instance;
     }

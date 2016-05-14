@@ -9,13 +9,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import nesto.gankio.R;
+import nesto.gankio.db.DBHelper;
+import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.ui.activity.favourite.FavouriteActivity;
 import nesto.gankio.ui.fragment.normal.NormalFragment;
+import nesto.gankio.util.LogUtil;
+import rx.functions.Action1;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -31,6 +37,7 @@ public class MainActivity extends ActionBarActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        loadFavourite();
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         showAnimation();
@@ -39,6 +46,22 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void setContentView() {
         setContentView(R.layout.activity_main);
+    }
+
+    private void loadFavourite() {
+        DBHelper.getInstance()
+                .getAll()
+                .subscribe(new Action1<ArrayList<Data>>() {
+                    @Override
+                    public void call(ArrayList<Data> datas) {
+                        LogUtil.d("收藏夹加载完成");
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtil.e(throwable.getLocalizedMessage());
+                    }
+                });
     }
 
     @Override
