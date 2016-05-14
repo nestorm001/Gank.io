@@ -13,8 +13,8 @@ import nesto.gankio.util.LogUtil;
  * Created on 2016/3/15.
  * By nesto
  */
-public class Nesto extends Application {
-    private static Nesto instance;
+public class A extends Application {
+    private static A instance;
     private Stack<Activity> activityStack;
 
     @Override
@@ -23,7 +23,7 @@ public class Nesto extends Application {
         instance = this;
     }
 
-    public static Nesto getInstance() {
+    public static A getInstance() {
         return instance;
     }
 

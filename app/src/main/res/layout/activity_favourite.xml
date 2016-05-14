@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background">
 
-    <include layout="@layout/action_bar" />
+    <include
+        android:id="@+id/bar"
+        layout="@layout/action_bar" />
 
-    <include layout="@layout/recycler_view" />
-</LinearLayout>
+    <include
+        layout="@layout/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bar" />
+</RelativeLayout>

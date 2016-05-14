@@ -25,7 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import nesto.gankio.R;
-import nesto.gankio.global.Nesto;
+import nesto.gankio.global.A;
 import nesto.gankio.ui.MvpView;
 import nesto.gankio.util.LogUtil;
 
@@ -50,7 +50,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Nesto.getInstance().addActivity(this);
+        A.getInstance().addActivity(this);
         context = this;
     }
 
@@ -85,7 +85,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Nesto.getInstance().finishActivity(this);
+        A.getInstance().finishActivity(this);
     }
 
     @Override

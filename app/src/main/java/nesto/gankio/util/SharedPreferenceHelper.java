@@ -3,7 +3,7 @@ package nesto.gankio.util;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import nesto.gankio.global.Nesto;
+import nesto.gankio.global.A;
 
 /**
  * Created on 2016/4/7.
@@ -14,7 +14,7 @@ public class SharedPreferenceHelper {
     private SharedPreferences preferences;
 
     private SharedPreferenceHelper() {
-        preferences = PreferenceManager.getDefaultSharedPreferences(Nesto.getContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(A.getContext());
     }
 
     private static class SingletonHolder {

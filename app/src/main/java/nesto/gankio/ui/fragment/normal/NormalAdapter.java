@@ -19,6 +19,8 @@ import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.content.ContentActivity;
 import nesto.gankio.ui.activity.video.VideoActivity;
+import nesto.gankio.util.AppUtil;
+import rx.Subscriber;
 
 /**
  * Created on 2016/5/9.
@@ -48,6 +50,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void add(ArrayList<Data> list) {
         this.list.addAll(list);
         hasMore = (list.size() == C.LOAD_NUM);
+        notifyDataSetChanged();
     }
 
     public void clearData() {
@@ -73,9 +76,12 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     protected void initItemView(final int position, final NormalViewHolder viewHolder) {
         final Data data = list.get(position);
+        viewHolder.title.setVisibility(View.GONE);
+        viewHolder.text.setVisibility(View.GONE);
+        viewHolder.image.setVisibility(View.GONE);
+        setFavourite(viewHolder);
         if (data.getType().equals(DataType.BENEFIT.toString())) {
-            viewHolder.title.setVisibility(View.GONE);
-            viewHolder.text.setVisibility(View.GONE);
+            viewHolder.image.setVisibility(View.VISIBLE);
             Picasso.with(context)
                     .load(data.getUrl())
                     .into(viewHolder.image);
@@ -90,7 +96,6 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     onItemClicked(data);
                 }
             });
-            setFavourite(viewHolder);
         }
         viewHolder.item.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -126,15 +131,34 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
     }
 
-    private void onFavouriteClicked(Data data, NormalViewHolder viewHolder) {
+    private void onFavouriteClicked(Data data, final NormalViewHolder viewHolder) {
         if (viewHolder.isExist()) {
             DBHelper.getInstance().remove(data);
             viewHolder.setExist(false);
         } else {
-            DBHelper.getInstance().add(data);
             viewHolder.setExist(true);
+            DBHelper.getInstance()
+                    .add(data)
+                    .subscribe(new Subscriber<Object>() {
+                        @Override
+                        public void onCompleted() {
+                            
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            AppUtil.showToast(context.getString(R.string.fail_to_add_to_favourite));
+                            viewHolder.setExist(false);
+                            setFavourite(viewHolder);
+                        }
+
+                        @Override
+                        public void onNext(Object o) {
+
+                        }
+                    });
+            setFavourite(viewHolder);
         }
-        setFavourite(viewHolder);
     }
 
     private void setFavourite(NormalViewHolder viewHolder) {

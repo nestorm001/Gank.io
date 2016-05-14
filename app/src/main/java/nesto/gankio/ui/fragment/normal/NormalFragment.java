@@ -109,7 +109,6 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
             public void call(Results results) {
                 NormalAdapter adapter = (NormalAdapter) recyclerView.getAdapter();
                 adapter.add(results.getResults());
-                adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
                 isRefreshing = false;
             }

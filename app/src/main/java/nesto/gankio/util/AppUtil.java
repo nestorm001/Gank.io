@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nesto.gankio.global.Nesto;
+import nesto.gankio.global.A;
 
 /**
  * Created on 2016/4/8.
@@ -38,7 +38,7 @@ public class AppUtil {
     public static void showToast(String text, @Duration int length) {
         //先检查是否在主线程中运行，再进行处理
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            Context context = Nesto.getContext();
+            Context context = A.getContext();
             if (toast == null) {
                 toast = Toast.makeText(context, text, length);
             } else {
@@ -123,7 +123,7 @@ public class AppUtil {
      * @param absolutePath 绝对路径
      */
     public static void addToMedia(final String absolutePath) {
-        final Context context = Nesto.getContext();
+        final Context context = A.getContext();
         if (absolutePath == null)
             return;
         Uri data = Uri.parse(absolutePath);

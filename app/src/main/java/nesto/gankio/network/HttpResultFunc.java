@@ -9,7 +9,7 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 import nesto.gankio.R;
-import nesto.gankio.global.Nesto;
+import nesto.gankio.global.A;
 import nesto.gankio.util.ConnectionState;
 import nesto.gankio.util.LogUtil;
 import retrofit2.Response;
@@ -22,7 +22,7 @@ import rx.functions.Func1;
  * @param <T> Subscriber真正需要的数据类型
  */
 public class HttpResultFunc<T> implements Func1<Result<T>, T> {
-    private Context context = Nesto.getContext();
+    private Context context = A.getContext();
 
     @Override
     public T call(Result<T> httpResult) {
@@ -48,7 +48,7 @@ public class HttpResultFunc<T> implements Func1<Result<T>, T> {
     private void handleInternetError(Throwable error) {
         if (error instanceof ConnectException) {
             boolean hasNetworkConnect =
-                    ConnectionState.getNetworkState(Nesto.getContext())
+                    ConnectionState.getNetworkState(A.getContext())
                             != ConnectionState.NETWORK_NONE;
             if (hasNetworkConnect) {
                 throw new InternetException(context.getString(R.string.cannot_connect_to_server));

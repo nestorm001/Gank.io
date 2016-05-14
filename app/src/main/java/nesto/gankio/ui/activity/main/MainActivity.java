@@ -1,5 +1,6 @@
 package nesto.gankio.ui.activity.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewCompat;
@@ -13,6 +14,7 @@ import butterknife.ButterKnife;
 import nesto.gankio.R;
 import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.ActionBarActivity;
+import nesto.gankio.ui.activity.favourite.FavouriteActivity;
 import nesto.gankio.ui.fragment.normal.NormalFragment;
 
 
@@ -89,6 +91,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.favourite:
+                startActivity(new Intent(this, FavouriteActivity.class));
                 break;
             default:
                 break;
