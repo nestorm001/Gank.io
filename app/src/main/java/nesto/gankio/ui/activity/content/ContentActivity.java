@@ -2,6 +2,8 @@ package nesto.gankio.ui.activity.content;
 
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -38,6 +40,8 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     NestedScrollView scrollView;
 
     private ContentPresenter presenter;
+    private Data data;
+    private MenuItem favourite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +88,12 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);  //设置 缓存模式
         settings.setDatabaseEnabled(true);
         settings.setAppCacheEnabled(true);
-        
+
         progressBar.setInterpolator(new LinearInterpolator());
     }
 
     private void load() {
-        Data data = getIntent().getParcelableExtra(Intents.TRANS_DATA);
+        data = getIntent().getParcelableExtra(Intents.TRANS_DATA);
         if (data != null) {
             webView.loadUrl(data.getUrl());
             setTitle(data.getType());
@@ -126,9 +130,41 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
             case android.R.id.home:
                 super.onBackPressed();
                 break;
+            case R.id.favourite:
+                onFavouriteClicked();
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        favourite = menu.findItem(R.id.favourite);
+        setFavourite(data);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void onFavouriteClicked() {
+        if (data.isFavoured()) {
+            presenter.removeFromFavourite(data);
+            data.setFavoured(false);
+        } else {
+            presenter.addToFavourite(data);
+            data.setFavoured(true);
+        }
+        setFavourite(data);
+    }
+
+    @Override
+    public void setFavourite(Data data) {
+        if (data != null && data.isFavoured()) {
+            favourite.setIcon(R.drawable.ic_action_favourited);
+        } else {
+            favourite.setIcon(R.drawable.ic_action_favourite);
+        }
     }
 }

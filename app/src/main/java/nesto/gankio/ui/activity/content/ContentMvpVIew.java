@@ -1,5 +1,6 @@
 package nesto.gankio.ui.activity.content;
 
+import nesto.gankio.model.Data;
 import nesto.gankio.ui.MvpView;
 
 /**
@@ -8,4 +9,6 @@ import nesto.gankio.ui.MvpView;
  */
 public interface ContentMvpView extends MvpView {
     void show(String url);
+
+    void setFavourite(Data data);
 }
