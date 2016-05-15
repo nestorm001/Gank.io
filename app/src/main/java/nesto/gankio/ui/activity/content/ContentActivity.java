@@ -37,8 +37,6 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     @Bind(R.id.scroll)
     NestedScrollView scrollView;
 
-    private Data data;
-
     private ContentPresenter presenter;
 
     @Override
@@ -50,7 +48,6 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         ButterKnife.bind(this);
         initWebView();
         load();
-        setTitle(data.getType());
         showOnBack();
     }
 
@@ -92,9 +89,10 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     }
 
     private void load() {
-        data = getIntent().getParcelableExtra(Intents.TRANS_DATA);
+        Data data = getIntent().getParcelableExtra(Intents.TRANS_DATA);
         if (data != null) {
             webView.loadUrl(data.getUrl());
+            setTitle(data.getType());
         }
         presenter.getRandomPicture();
     }
