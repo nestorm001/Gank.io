@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
                     public void call(Throwable throwable) {
                         LogUtil.e(throwable.getLocalizedMessage());
                     }
-                });
+                }).unsubscribe();
     }
 
     @Override
