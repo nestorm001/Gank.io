@@ -1,10 +1,8 @@
 package nesto.gankio.ui.activity.content;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.webkit.WebChromeClient;
@@ -18,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import nesto.gankio.R;
 import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
@@ -38,10 +37,11 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     ProgressBar progressBar;
     @Bind(R.id.scroll)
     NestedScrollView scrollView;
+    @Bind(R.id.fab)
+    FloatingActionButton favourite;
 
     private ContentPresenter presenter;
     private Data data;
-    private MenuItem favourite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +97,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         if (data != null) {
             webView.loadUrl(data.getUrl());
             setTitle(data.getType());
+            setFavourite(data);
         }
         presenter.getRandomPicture();
     }
@@ -124,31 +125,8 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                break;
-            case R.id.favourite:
-                onFavouriteClicked();
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        favourite = menu.findItem(R.id.favourite);
-        setFavourite(data);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    private void onFavouriteClicked() {
+    @OnClick(R.id.fab)
+    void onFavouriteClicked() {
         if (data.isFavoured()) {
             presenter.removeFromFavourite(data);
             data.setFavoured(false);
@@ -162,9 +140,9 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     @Override
     public void setFavourite(Data data) {
         if (data != null && data.isFavoured()) {
-            favourite.setIcon(R.drawable.ic_action_favourited);
+            favourite.setImageResource(R.drawable.ic_action_favourited);
         } else {
-            favourite.setIcon(R.drawable.ic_action_favourite);
+            favourite.setImageResource(R.drawable.ic_action_favourite);
         }
     }
 }

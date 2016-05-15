@@ -3,7 +3,6 @@
     android:id="@+id/app_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
     android:fitsSystemWindows="true"
     android:minHeight="@dimen/app_bar_height"
     android:theme="@style/AppTheme.AppBarOverlay">
@@ -12,7 +11,7 @@
         android:id="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
+        android:minHeight="@dimen/app_bar_height"
         app:contentScrim="?attr/colorPrimary"
         app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">

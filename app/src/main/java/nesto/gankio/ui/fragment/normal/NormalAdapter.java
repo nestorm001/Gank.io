@@ -122,8 +122,8 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void onItemClicked(Data data) {
         Intent intent = data.getType().equals(DataType.VIDEO.toString()) ?
-                new Intent(context, VideoActivity.class).putExtra(Intents.TRANS_DATA, data)
-                : new Intent(context, ContentActivity.class).putExtra(Intents.TRANS_DATA, data);
+                new Intent(context, VideoActivity.class).putExtra(Intents.TRANS_DATA, data) :
+                new Intent(context, ContentActivity.class).putExtra(Intents.TRANS_DATA, data);
         context.startActivity(intent);
     }
 
