@@ -39,7 +39,8 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.list = new ArrayList<>();
     }
 
-    public NormalAdapter(ArrayList<Data> list) {
+    public NormalAdapter(Context context, ArrayList<Data> list) {
+        this.context = context;
         this.list = list;
     }
 
@@ -53,7 +54,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         hasMore = (list.size() == C.LOAD_NUM);
         notifyDataSetChanged();
     }
-        
+
     public void clearData() {
         list.clear();
         this.hasMore = false;
@@ -109,7 +110,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         viewHolder.favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onFavouriteClicked(data, viewHolder);
+                onFavouriteClicked(data, viewHolder, position);
             }
         });
     }
@@ -133,18 +134,18 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
     }
 
-    private void onFavouriteClicked(Data data, NormalViewHolder viewHolder) {
+    protected void onFavouriteClicked(Data data, NormalViewHolder viewHolder, int position) {
         if (data.isFavoured()) {
-            removeFromFavourite(data, viewHolder);
+            removeFromFavourite(data, viewHolder, position);
             data.setFavoured(false);
         } else {
-            addToFavourite(data, viewHolder);
+            addToFavourite(data, viewHolder, position);
             data.setFavoured(true);
         }
         setFavourite(data, viewHolder);
     }
 
-    private void addToFavourite(final Data data, final NormalViewHolder viewHolder) {
+    protected void addToFavourite(final Data data, final NormalViewHolder viewHolder, int position) {
         DBHelper.getInstance()
                 .add(data)
                 .subscribe(new Subscriber<Object>() {
@@ -168,7 +169,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 });
     }
 
-    private void removeFromFavourite(final Data data, final NormalViewHolder viewHolder) {
+    protected void removeFromFavourite(final Data data, final NormalViewHolder viewHolder, int position) {
         DBHelper.getInstance()
                 .remove(data)
                 .subscribe(new Subscriber<Object>() {
@@ -192,7 +193,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 });
     }
 
-    private void setFavourite(Data data, NormalViewHolder viewHolder) {
+    protected void setFavourite(Data data, NormalViewHolder viewHolder) {
         if (data.isFavoured()) {
             viewHolder.favourite.setImageResource(R.drawable.ic_action_favourited);
         } else {

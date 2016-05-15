@@ -162,7 +162,6 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     }
 
     public void showProcessDialog(String title) {
-        LogUtil.d(title);
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
             //七牛的进度有问题，还是转圈圈靠谱

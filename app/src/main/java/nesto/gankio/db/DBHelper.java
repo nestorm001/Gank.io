@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import nesto.gankio.global.C;
 import nesto.gankio.model.Data;
 import nesto.gankio.network.HttpMethods;
-import nesto.gankio.util.LogUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -23,7 +22,6 @@ import rx.schedulers.Schedulers;
  * By nesto
  */
 public class DBHelper {
-    private DBHelper dbHelper;
     private Gson gson;
     private BriteDatabase db;
     private ArrayList<Data> favouriteList;
@@ -50,11 +48,11 @@ public class DBHelper {
                 favouriteList.add(data);
                 BriteDatabase.Transaction transaction = db.newTransaction();
                 try {
-                    //TODO order
                     db.insert(C.FAVOURITE_TABLE, makeData(1, data));
                     transaction.markSuccessful();
                 } finally {
                     transaction.end();
+                    subscriber.onCompleted();
                 }
             }
         }).compose(HttpMethods.getInstance().setThreads());
@@ -72,6 +70,7 @@ public class DBHelper {
                     transaction.markSuccessful();
                 } finally {
                     transaction.end();
+                    subscriber.onCompleted();
                 }
             }
         }).compose(HttpMethods.getInstance().setThreads());
@@ -101,7 +100,6 @@ public class DBHelper {
                             int name = cursor.getColumnIndex(C.VALUE);
                             favouriteList.add(toData(cursor.getString(name)));
                         } while (cursor.moveToNext());
-                        LogUtil.d("favouriteList " + favouriteList.size());
                         return favouriteList;
                     }
                 });
@@ -110,7 +108,7 @@ public class DBHelper {
     private ContentValues makeData(int order, Data data) {
         ContentValues values = new ContentValues();
         values.put(C.ID, data.get_id());
-        values.put(C.VALUE, gson.toJson(data));
+        values.put(C.VALUE, toJson(data));
 //        values.put(C.ID, AppUtil.getCurrentTime() + order);
 //        values.put(C.VALUE, AppUtil.getCurrentTime());
         values.put(C.ORDER, order);
