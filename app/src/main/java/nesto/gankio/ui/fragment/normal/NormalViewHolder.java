@@ -27,6 +27,8 @@ public class NormalViewHolder extends RecyclerView.ViewHolder {
     public TextView text;
     @Bind(R.id.favourite)
     public ImageButton favourite;
+    @Bind(R.id.share)
+    public ImageButton share;
 
     public NormalViewHolder(View convertView) {
         super(convertView);

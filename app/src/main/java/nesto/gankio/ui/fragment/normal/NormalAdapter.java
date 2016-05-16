@@ -104,11 +104,10 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
         }
-        viewHolder.item.setOnLongClickListener(new View.OnLongClickListener() {
+        viewHolder.share.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                onItemLongClicked(data);
-                return true;
+            public void onClick(View v) {
+                onShareClicked(data);
             }
         });
         viewHolder.favourite.setOnClickListener(new View.OnClickListener() {
@@ -131,8 +130,9 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         context.startActivity(intent);
     }
 
-    private void onItemLongClicked(Data data) {
+    private void onShareClicked(Data data) {
         Intent share = new Intent(Intent.ACTION_SEND)
+                .putExtra(Intent.EXTRA_TITLE, data.getDesc())
                 .putExtra(Intent.EXTRA_TEXT, data.getUrl())
                 .setType("text/html");
         context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));

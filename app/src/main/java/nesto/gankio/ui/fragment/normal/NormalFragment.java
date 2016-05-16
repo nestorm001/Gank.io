@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import nesto.gankio.R;
@@ -100,6 +99,10 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onResume() {
         super.onResume();
+        refreshFavouriteState();
+    }
+
+    private void refreshFavouriteState() {
         if (adapter.getItemCount() != 0) {
             ArrayList<Data> list = adapter.getList();
             for (int i = 0; i < list.size(); i++) {
@@ -146,7 +149,6 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
         Action1<Results> onNext = new Action1<Results>() {
             @Override
             public void call(Results results) {
-                NormalAdapter adapter = getAdapter();
                 adapter.add(results.getResults());
                 swipeRefreshLayout.setRefreshing(false);
                 isRefreshing = false;
@@ -170,7 +172,6 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                NormalAdapter adapter = getAdapter();
                 if (lastVisibleItem >= adapter.getItemCount() - 5
                         && adapter.getItemCount() > 0) {
                     if (adapter.isHasMore() && !isRefreshing) {
@@ -184,14 +185,10 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onRefresh() {
         pageNum = 0;
-        getAdapter().clearData();
+        adapter.clearData();
         // avoid exception in instant run
         if (type != null) {
             getData();
         }
-    }
-
-    private NormalAdapter getAdapter() {
-        return ((NormalAdapter) ((AnimationAdapter) recyclerView.getAdapter()).getWrappedAdapter());
     }
 }

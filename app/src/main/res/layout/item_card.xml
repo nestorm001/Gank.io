@@ -55,5 +55,15 @@
             android:layout_alignParentRight="true"
             android:clickable="true"
             android:src="@drawable/ic_action_favourite" />
+
+        <ImageButton
+            android:id="@+id/share"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/favourite"
+            android:clickable="true"
+            android:src="@drawable/ic_action_share" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>
