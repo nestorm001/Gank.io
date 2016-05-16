@@ -10,10 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import nesto.gankio.R;
+import nesto.gankio.db.DBHelper;
 import nesto.gankio.global.C;
+import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
 import nesto.gankio.model.Results;
 import nesto.gankio.network.ErrorHandlerHelper;
@@ -76,13 +80,27 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isCreateView) {
             lazyLoad();
-            //TODO 刷新收藏状态
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter.getItemCount() != 0) {
+            ArrayList<Data> list = adapter.getList();
+            for (int i = 0; i < list.size(); i++) {
+                Data data = list.get(i);
+                boolean isExist = DBHelper.getInstance().isExist(data);
+                if (data.isFavoured() != isExist) {
+                    adapter.notifyItemChanged(i);
+                }
+            }
         }
     }
 
     private void lazyLoad() {
         //如果没有加载过就加载，否则就不再加载了
-        if (!isLoadData) {
+        if (adapter.getItemCount() == 0) {
             //加载数据操作
             onRefresh();
         }
@@ -153,6 +171,9 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onRefresh() {
         pageNum = 0;
         ((NormalAdapter) recyclerView.getAdapter()).clearData();
-        getData();
+        // avoid exception in instant run
+        if (type != null) {
+            getData();
+        }
     }
 }

@@ -49,6 +49,10 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.hasMore = hasMore;
     }
 
+    public ArrayList<Data> getList() {
+        return list;
+    }
+
     public void add(ArrayList<Data> list) {
         this.list.addAll(list);
         hasMore = (list.size() == C.LOAD_NUM);
