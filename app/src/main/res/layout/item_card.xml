@@ -61,6 +61,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
+            android:layout_marginRight="@dimen/half_padding"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@id/favourite"
             android:clickable="true"
