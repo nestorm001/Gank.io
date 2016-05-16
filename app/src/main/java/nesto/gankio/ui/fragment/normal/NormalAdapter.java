@@ -107,7 +107,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         viewHolder.share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onShareClicked(data);
+                AppUtil.onShareClicked(data, context);
             }
         });
         viewHolder.favourite.setOnClickListener(new View.OnClickListener() {
@@ -128,14 +128,6 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 new Intent(context, VideoActivity.class).putExtra(Intents.TRANS_DATA, data) :
                 new Intent(context, ContentActivity.class).putExtra(Intents.TRANS_DATA, data);
         context.startActivity(intent);
-    }
-
-    private void onShareClicked(Data data) {
-        Intent share = new Intent(Intent.ACTION_SEND)
-                .putExtra(Intent.EXTRA_TITLE, data.getDesc())
-                .putExtra(Intent.EXTRA_TEXT, data.getUrl())
-                .setType("text/html");
-        context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
     }
 
     protected void onFavouriteClicked(Data data, NormalViewHolder viewHolder, int position) {

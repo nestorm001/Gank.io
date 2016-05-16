@@ -1,8 +1,10 @@
 package nesto.gankio.ui.activity.content;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.webkit.WebChromeClient;
@@ -16,11 +18,11 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import nesto.gankio.R;
 import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
+import nesto.gankio.util.AppUtil;
 
 /**
  * Created on 2016/5/11.
@@ -37,8 +39,9 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     ProgressBar progressBar;
     @Bind(R.id.scroll)
     NestedScrollView scrollView;
-    @Bind(R.id.fab)
-    FloatingActionButton favourite;
+
+    private MenuItem favourite;
+    private MenuItem share;
 
     private ContentPresenter presenter;
     private Data data;
@@ -125,8 +128,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         }
     }
 
-    @OnClick(R.id.fab)
-    void onFavouriteClicked() {
+    private void onFavouriteClicked() {
         if (data.isFavoured()) {
             presenter.removeFromFavourite(data);
             data.setFavoured(false);
@@ -140,9 +142,34 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     @Override
     public void setFavourite(Data data) {
         if (data != null && data.isFavoured()) {
-            favourite.setImageResource(R.drawable.ic_action_favourited);
+            favourite.setIcon(R.drawable.ic_action_favourited);
         } else {
-            favourite.setImageResource(R.drawable.ic_action_favourite);
+            favourite.setIcon(R.drawable.ic_action_favourite);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        share = menu.findItem(R.id.share);
+        share.setVisible(true);
+        favourite = menu.findItem(R.id.favourite);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.favourite:
+                onFavouriteClicked();
+                break;
+            case R.id.share:
+                AppUtil.onShareClicked(data, getContext());
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

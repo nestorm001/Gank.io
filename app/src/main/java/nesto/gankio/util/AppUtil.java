@@ -21,7 +21,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nesto.gankio.R;
 import nesto.gankio.global.A;
+import nesto.gankio.model.Data;
 
 /**
  * Created on 2016/4/8.
@@ -52,7 +54,7 @@ public class AppUtil {
     public static void showToast(String text) {
         showToast(text, Toast.LENGTH_SHORT);
     }
-    
+
     public static void hideSoftKeyboard(Context context, EditText editText) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
@@ -154,5 +156,13 @@ public class AppUtil {
 
     public static void releaseScreenOn(Activity activity) {
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    public static void onShareClicked(Data data, Context context) {
+        Intent share = new Intent(Intent.ACTION_SEND)
+                //学习知乎，各种应用不接收title，所有内容全放在text里面
+                .putExtra(Intent.EXTRA_TEXT, data.getDesc() + " " + data.getUrl())
+                .setType("text/html");
+        context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
     }
 }
