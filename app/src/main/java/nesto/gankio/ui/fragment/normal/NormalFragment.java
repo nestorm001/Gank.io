@@ -9,11 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.global.C;
@@ -65,14 +69,24 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recycler_view, container, false);
         ButterKnife.bind(this, view);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
-        swipeRefreshLayout.setOnRefreshListener(this);
+        initRecycleView();
         setListener();
         isCreateView = true;
         return view;
+    }
+
+    private void initRecycleView() {
+        ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(adapter);
+        alphaAdapter.setInterpolator(new OvershootInterpolator());
+        recyclerView.setAdapter(alphaAdapter);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        recyclerView.setItemAnimator(new LandingAnimator());
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -132,7 +146,7 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
         Action1<Results> onNext = new Action1<Results>() {
             @Override
             public void call(Results results) {
-                NormalAdapter adapter = (NormalAdapter) recyclerView.getAdapter();
+                NormalAdapter adapter = getAdapter();
                 adapter.add(results.getResults());
                 swipeRefreshLayout.setRefreshing(false);
                 isRefreshing = false;
@@ -156,7 +170,7 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                NormalAdapter adapter = (NormalAdapter) recyclerView.getAdapter();
+                NormalAdapter adapter = getAdapter();
                 if (lastVisibleItem >= adapter.getItemCount() - 5
                         && adapter.getItemCount() > 0) {
                     if (adapter.isHasMore() && !isRefreshing) {
@@ -170,10 +184,14 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onRefresh() {
         pageNum = 0;
-        ((NormalAdapter) recyclerView.getAdapter()).clearData();
+        getAdapter().clearData();
         // avoid exception in instant run
         if (type != null) {
             getData();
         }
+    }
+
+    private NormalAdapter getAdapter() {
+        return ((NormalAdapter) ((AnimationAdapter) recyclerView.getAdapter()).getWrappedAdapter());
     }
 }

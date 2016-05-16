@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.animation.OvershootInterpolator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.ui.activity.ActionBarActivity;
@@ -48,9 +51,15 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
 
     private void initView() {
         swipeRefreshLayout.setEnabled(false);
-        recyclerView.setAdapter(adapter);
+
+        ScaleInAnimationAdapter alphaAdapter = new ScaleInAnimationAdapter(adapter);
+        alphaAdapter.setInterpolator(new OvershootInterpolator());
+        recyclerView.setAdapter(alphaAdapter);
+        
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        
+        recyclerView.setItemAnimator(new LandingAnimator());
     }
 
     @Override

@@ -88,6 +88,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'jp.wasabeef:recyclerview-animators:2.2.3'
 }
 
 repositories {
