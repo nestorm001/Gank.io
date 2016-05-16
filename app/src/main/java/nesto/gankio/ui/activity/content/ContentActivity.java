@@ -144,7 +144,12 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         Callback callback = new Callback() {
             @Override
             public void onSuccess() {
-                // currently not used
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                if (toolbar != null) {
+                    toolbar.setFitsSystemWindows(false);
+                    FrameLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+                    layoutParams.setMargins(0, 0, 0, 0);
+                }
             }
 
             @Override
