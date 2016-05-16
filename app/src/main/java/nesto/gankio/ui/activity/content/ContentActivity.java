@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import nesto.gankio.R;
 import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
@@ -48,6 +49,8 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
 
     @Bind(R.id.app_bar)
     AppBarLayout appBarLayout;
+
+    private String currentUrl;
 
     private MenuItem favourite;
 
@@ -91,6 +94,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
+                currentUrl = url;
                 scrollView.scrollTo(0, 0);
                 return true;
             }
@@ -111,12 +115,10 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
             public void run() {
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 if (toolbar != null) {
-                    toolbar.setFitsSystemWindows(true);
-                    
                     Rect statusBar = new Rect();
                     getWindow().getDecorView().getWindowVisibleDisplayFrame(statusBar);
                     int statusBarHeight = statusBar.top;
-                    
+
                     FrameLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
                     layoutParams.setMargins(0, statusBarHeight, 0, 0);
                 }
@@ -127,6 +129,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     private void load() {
         data = getIntent().getParcelableExtra(Intents.TRANS_DATA);
         if (data != null) {
+            currentUrl = data.getUrl();
             webView.loadUrl(data.getUrl());
             setTitle(data.getType());
         }
@@ -146,7 +149,6 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
             public void onSuccess() {
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 if (toolbar != null) {
-                    toolbar.setFitsSystemWindows(false);
                     FrameLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
                     layoutParams.setMargins(0, 0, 0, 0);
                 }
@@ -216,5 +218,12 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.refresh)
+    void onRefresh() {
+        if (currentUrl != null && !currentUrl.isEmpty()) {
+            webView.loadUrl(currentUrl);
+        }
     }
 }
