@@ -27,7 +27,7 @@ import android.widget.TextView;
 import nesto.gankio.R;
 import nesto.gankio.global.A;
 import nesto.gankio.ui.MvpView;
-import nesto.gankio.util.LogUtil;
+import nesto.gankio.util.L;
 
 
 /**
@@ -208,7 +208,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
 
     protected void setVisibilityVisible(View view) {
         if (view.getVisibility() != View.VISIBLE) {
-            LogUtil.d("setVisibilityVisible " + view.toString());
+            L.d("setVisibilityVisible " + view.toString());
             view.setVisibility(View.VISIBLE);
             view.setAlpha(0);
             showViewAnimation(view);
@@ -217,7 +217,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
 
     protected void setVisibilityGone(final View view) {
         if (view.getVisibility() != View.GONE) {
-            LogUtil.d("setVisibilityGone " + view.toString());
+            L.d("setVisibilityGone " + view.toString());
             view.setAlpha(1);
             showHideAnimation(view);
             new Handler().postDelayed(new Runnable() {

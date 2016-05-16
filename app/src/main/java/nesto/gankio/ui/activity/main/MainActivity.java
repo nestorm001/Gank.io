@@ -20,7 +20,7 @@ import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.ui.activity.favourite.FavouriteActivity;
 import nesto.gankio.ui.fragment.normal.NormalFragment;
-import nesto.gankio.util.LogUtil;
+import nesto.gankio.util.L;
 import rx.functions.Action1;
 
 
@@ -54,12 +54,12 @@ public class MainActivity extends ActionBarActivity {
                 .subscribe(new Action1<ArrayList<Data>>() {
                     @Override
                     public void call(ArrayList<Data> datas) {
-                        LogUtil.d("收藏夹加载完成");
+                        L.d("收藏夹加载完成");
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        LogUtil.e(throwable.getLocalizedMessage());
+                        L.e(throwable.getLocalizedMessage());
                     }
                 }).unsubscribe();
     }

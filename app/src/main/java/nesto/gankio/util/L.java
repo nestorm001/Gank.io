@@ -9,7 +9,7 @@ import nesto.gankio.BuildConfig;
  * Created by Jack_long on 2015/7/17.
  * debug模式下打印日志
  */
-public class LogUtil {
+public class L {
     public static final String TAG = "wtf";
 
     public static void d(String logInfo) {
