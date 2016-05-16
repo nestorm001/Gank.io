@@ -32,6 +32,7 @@ public class FavouriteAdapter extends NormalAdapter {
                         //其实用了同一个data对象，为了刷新列表状态，需要重设状态，使其有变化，暂时没啥更好的办法
                         data.setFavoured(true);
                         notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, getItemCount());
                     }
 
                     @Override
