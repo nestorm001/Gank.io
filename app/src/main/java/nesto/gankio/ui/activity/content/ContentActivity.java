@@ -41,7 +41,6 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     NestedScrollView scrollView;
 
     private MenuItem favourite;
-    private MenuItem share;
 
     private ContentPresenter presenter;
     private Data data;
@@ -100,7 +99,6 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         if (data != null) {
             webView.loadUrl(data.getUrl());
             setTitle(data.getType());
-            setFavourite(data);
         }
         presenter.getRandomPicture();
     }
@@ -152,9 +150,10 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        share = menu.findItem(R.id.share);
+        MenuItem share = menu.findItem(R.id.share);
         share.setVisible(true);
         favourite = menu.findItem(R.id.favourite);
+        setFavourite(data);
         return super.onCreateOptionsMenu(menu);
     }
 

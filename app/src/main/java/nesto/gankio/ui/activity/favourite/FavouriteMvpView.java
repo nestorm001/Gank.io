@@ -7,4 +7,5 @@ import nesto.gankio.ui.MvpView;
  * By nesto
  */
 public interface FavouriteMvpView extends MvpView {
+    void addItem();
 }

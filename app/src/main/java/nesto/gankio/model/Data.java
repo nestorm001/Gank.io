@@ -42,6 +42,13 @@ public class Data implements Parcelable {
         this.used = used;
     }
 
+    public Data(String _id, String desc, String url, String type) {
+        this._id = _id;
+        this.desc = desc;
+        this.url = url;
+        this.type = type;
+    }
+
     public String get_id() {
         return _id;
     }

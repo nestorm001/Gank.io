@@ -12,4 +12,6 @@ public class C {
     public static final String VALUE = "value";
     public static final String ORDER = "item_order";
     public static final int DB_VERSION = 1;
+    
+    public static final String FROM_SHARE = "收藏";
 }

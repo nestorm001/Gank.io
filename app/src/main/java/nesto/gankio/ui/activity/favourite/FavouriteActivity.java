@@ -1,5 +1,6 @@
 package nesto.gankio.ui.activity.favourite;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,6 +51,13 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
         presenter.attachView(this);
         adapter = new FavouriteAdapter(this, DBHelper.getInstance().getFavouriteList());
         setTitle(getString(R.string.favourite_list));
+        presenter.dealWithIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        presenter.dealWithIntent(intent);
     }
 
     private void initView() {
@@ -105,5 +113,11 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(callBack);
         touchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void addItem() {
+        adapter.notifyItemInserted(adapter.getItemCount() - 1);
+        adapter.notifyItemRangeChanged(2, adapter.getItemCount());
     }
 }
