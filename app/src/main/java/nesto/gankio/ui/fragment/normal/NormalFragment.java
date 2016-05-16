@@ -44,11 +44,11 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private NormalAdapter adapter;
 
     private int pageNum = 0;
-    private boolean isRefreshing = false;
+    private boolean isLoading = false;
     //控件是否已经初始化
     private boolean isCreateView = false;
     //是否已经加载过数据
-    private boolean isLoadData = false;
+    private boolean isNoData = true;
 
     private Subscription subscription;
 
@@ -144,15 +144,18 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void getData() {
-        isRefreshing = true;
+        isLoading = true;
         swipeRefreshLayout.setRefreshing(true);
         Action1<Results> onNext = new Action1<Results>() {
             @Override
             public void call(Results results) {
+                if (isNoData) {
+                    adapter.clearData();
+                }
                 adapter.add(results.getResults());
                 swipeRefreshLayout.setRefreshing(false);
-                isRefreshing = false;
-                isLoadData = true;
+                isLoading = false;
+                isNoData = false;
             }
         };
         Action1<Throwable> onError = new ErrorHandlerHelper().createOnError(null);
@@ -174,7 +177,7 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (lastVisibleItem >= adapter.getItemCount() - 5
                         && adapter.getItemCount() > 0) {
-                    if (adapter.isHasMore() && !isRefreshing) {
+                    if (adapter.isHasMore() && !isLoading) {
                         getData();
                     }
                 }
@@ -185,7 +188,7 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onRefresh() {
         pageNum = 0;
-        adapter.clearData();
+        isNoData = true;
         // avoid exception in instant run
         if (type != null) {
             getData();
