@@ -44,10 +44,11 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     }
 
     private void handleText(Intent intent) {
+        String title = intent.getStringExtra(Intent.EXTRA_TITLE);
         String content = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (content.contains("http")) {
             int position = content.indexOf("http");
-            String title = content.substring(0, position);
+            title = (title == null || title.isEmpty()) ? content.substring(0, position) : title;
             String url = content.substring(position, content.length());
             String id = Integer.toHexString(AppUtil.getCurrentTime().hashCode());
             addToFavourite(new Data(id, title, url, C.FROM_SHARE));
