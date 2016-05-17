@@ -134,7 +134,7 @@ public class MainActivity extends ActionBarActivity {
     private Random random = new Random();
 
     private boolean isSucceed() {
-        if (random.nextInt(100) > 50) {
+        if (random.nextInt(100) > 90) {
             return true;
         } else {
             AppUtil.showToast(getString(R.string.fun_hint));

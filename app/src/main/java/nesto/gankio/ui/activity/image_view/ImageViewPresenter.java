@@ -8,7 +8,6 @@ import nesto.gankio.model.Results;
 import nesto.gankio.network.ErrorHandlerHelper;
 import nesto.gankio.network.HttpMethods;
 import nesto.gankio.ui.Presenter;
-import nesto.gankio.util.LogUtil;
 import rx.functions.Action1;
 
 /**
@@ -56,7 +55,6 @@ public class ImageViewPresenter implements Presenter<ImageViewMvpView> {
         String url = urls.get(position);
         urls.remove(position);
         if (view != null) {
-            LogUtil.d(url);
             view.show(url);
         }
     }

@@ -121,8 +121,10 @@ public class HttpMethods {
     }
 
     public Subscription getOneRandomPicture(Action1<String> onNext, Action1<Throwable> onError) {
-        final int loadNum = 10;
-        return networkService.getRandom(DataType.BENEFIT.toString(), loadNum)
+        final int loadNum = 20;
+//        return networkService.getRandom(DataType.BENEFIT.toString(), loadNum)
+        int page = new Random().nextInt(10) + 1;
+        return networkService.getData(DataType.BENEFIT.toString(), loadNum, page)
                 .map(new HttpResultFunc<Results>())
                 .compose(this.<Results>setThreads())
                 .map(new Func1<Results, String>() {
@@ -140,7 +142,9 @@ public class HttpMethods {
 
     public Subscription getRandomPictureUrls(Action1<Results> onNext, Action1<Throwable> onError) {
         final int loadNum = 20;
-        return networkService.getRandom(DataType.BENEFIT.toString(), loadNum)
+        // 随机很有问题的感觉，不如直接随机页数
+        int page = new Random().nextInt(10) + 1;
+        return networkService.getData(DataType.BENEFIT.toString(), loadNum, page)
                 .map(new HttpResultFunc<Results>())
                 .compose(this.<Results>setThreads())
                 .subscribe(onNext, onError);
