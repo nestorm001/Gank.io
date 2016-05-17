@@ -3,7 +3,7 @@ package nesto.gankio.network;
 import android.support.annotation.Nullable;
 
 import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.L;
+import nesto.gankio.util.LogUtil;
 import rx.functions.Action1;
 
 /**
@@ -38,8 +38,8 @@ public class ErrorHandlerHelper {
         if (throwable instanceof InternetException) {
             AppUtil.showToast(throwable.getMessage());
         } else if (throwable instanceof HttpException) {
-            L.e("getErrorCode:" + ((HttpException) throwable).getErrorCode());
-            L.e("getMessage:" + throwable.getLocalizedMessage());
+            LogUtil.e("getErrorCode:" + ((HttpException) throwable).getErrorCode());
+            LogUtil.e("getMessage:" + throwable.getLocalizedMessage());
             boolean isUnauthorized = ((HttpException) throwable).getErrorCode() == 401;
             boolean is404 = ((HttpException) throwable).getErrorCode() == 404;
             if (isUnauthorized && shouldHandle401) {
@@ -52,7 +52,7 @@ public class ErrorHandlerHelper {
                 }
             }
         } else {
-            L.e("error:" + throwable);
+            LogUtil.e("error:" + throwable);
             AppUtil.showToast(throwable.getLocalizedMessage());
         }
     }

@@ -13,8 +13,10 @@
     
     <!--menu-->
     <string name="favourite">收藏列表</string>
-    
-    
+    <string name="fun">你猜有啥用</string>
+    <string name="fun_hint">多点几下，会跳的哦！</string>
+
+
     <string name="send_to">发送到</string>
     <string name="fail_to_add_to_favourite">收藏失败</string>
     <string name="fail_to_remove_from_favourite">取消收藏失败</string>

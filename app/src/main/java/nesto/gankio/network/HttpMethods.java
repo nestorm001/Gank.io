@@ -137,4 +137,12 @@ public class HttpMethods {
                 })
                 .subscribe(onNext, onError);
     }
+
+    public Subscription getRandomPictureUrls(Action1<Results> onNext, Action1<Throwable> onError) {
+        final int loadNum = 20;
+        return networkService.getRandom(DataType.BENEFIT.toString(), loadNum)
+                .map(new HttpResultFunc<Results>())
+                .compose(this.<Results>setThreads())
+                .subscribe(onNext, onError);
+    }
 }

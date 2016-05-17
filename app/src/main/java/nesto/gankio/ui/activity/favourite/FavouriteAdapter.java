@@ -10,7 +10,7 @@ import nesto.gankio.model.Data;
 import nesto.gankio.ui.fragment.normal.NormalAdapter;
 import nesto.gankio.ui.fragment.normal.NormalViewHolder;
 import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.L;
+import nesto.gankio.util.LogUtil;
 import rx.Subscriber;
 
 /**
@@ -37,7 +37,7 @@ public class FavouriteAdapter extends NormalAdapter {
 
                     @Override
                     public void onError(Throwable e) {
-                        L.d(e.getLocalizedMessage());
+                        LogUtil.d(e.getLocalizedMessage());
                         AppUtil.showToast(context.getString(R.string.fail_to_remove_from_favourite));
                         data.setFavoured(false);
                         setFavourite(data, viewHolder);

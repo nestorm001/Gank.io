@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,8 +20,10 @@ import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.ui.activity.favourite.FavouriteActivity;
+import nesto.gankio.ui.activity.image_view.ImageViewActivity;
 import nesto.gankio.ui.fragment.normal.NormalFragment;
-import nesto.gankio.util.L;
+import nesto.gankio.util.AppUtil;
+import nesto.gankio.util.LogUtil;
 import rx.functions.Action1;
 
 
@@ -54,12 +57,12 @@ public class MainActivity extends ActionBarActivity {
                 .subscribe(new Action1<ArrayList<Data>>() {
                     @Override
                     public void call(ArrayList<Data> datas) {
-                        L.d("收藏夹加载完成");
+                        LogUtil.d("收藏夹加载完成");
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        L.e(throwable.getLocalizedMessage());
+                        LogUtil.e(throwable.getLocalizedMessage());
                     }
                 }).unsubscribe();
     }
@@ -107,6 +110,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.view_image).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -116,9 +120,25 @@ public class MainActivity extends ActionBarActivity {
             case R.id.favourite:
                 startActivity(new Intent(this, FavouriteActivity.class));
                 break;
+            case R.id.view_image:
+                if (isSucceed()) {
+                    startActivity(new Intent(this, ImageViewActivity.class));
+                }
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Random random = new Random();
+
+    private boolean isSucceed() {
+        if (random.nextInt(100) > 50) {
+            return true;
+        } else {
+            AppUtil.showToast(getString(R.string.fun_hint));
+            return false;
+        }
     }
 }

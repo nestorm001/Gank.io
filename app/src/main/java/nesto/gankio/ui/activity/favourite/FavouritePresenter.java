@@ -9,7 +9,7 @@ import nesto.gankio.global.C;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.Presenter;
 import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.L;
+import nesto.gankio.util.LogUtil;
 import rx.Subscriber;
 
 /**
@@ -31,7 +31,7 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     }
 
     public void dealWithIntent(Intent intent) {
-        L.d(intent.toString());
+        LogUtil.d(intent.toString());
         String action = intent.getAction();
         String type = intent.getType();
         if (Intent.ACTION_SEND.equals(action) && type != null) {
@@ -73,7 +73,7 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        L.d(e.getLocalizedMessage());
+                        LogUtil.d(e.getLocalizedMessage());
                         AppUtil.showToast(A.getContext().getString(R.string.fail_to_add_to_favourite));
                     }
 

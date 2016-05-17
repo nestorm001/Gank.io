@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/view_image"
+        android:icon="@drawable/ic_action_for_fun"
+        android:title="@string/fun"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:visible="true" />
     <item
         android:id="@+id/share"
         android:icon="@drawable/ic_action_share"
-        android:title="@string/favourite"
+        android:title="@string/send_to"
         android:visible="false"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        tools:visible="true" />
     <item
         android:id="@+id/favourite"
         android:icon="@drawable/ic_action_favourited"

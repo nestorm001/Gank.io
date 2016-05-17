@@ -6,7 +6,7 @@ import android.content.Context;
 
 import java.util.Stack;
 
-import nesto.gankio.util.L;
+import nesto.gankio.util.LogUtil;
 
 
 /**
@@ -81,7 +81,7 @@ public class A extends Application {
      * 结束所有Activity
      */
     public void finishAllActivity() {
-        L.d("finishAllActivity: " + String.valueOf(activityStack.size()));
+        LogUtil.d("finishAllActivity: " + String.valueOf(activityStack.size()));
         for (int i = 0, size = activityStack.size(); i < size; i++) {
             if (null != activityStack.get(i)) {
                 activityStack.get(i).finish();
