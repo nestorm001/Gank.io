@@ -1,12 +1,18 @@
 package nesto.gankio.ui.activity.favourite;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.EditText;
 
 import java.util.Collections;
 
@@ -16,6 +22,7 @@ import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
+import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
 
 /**
@@ -119,5 +126,29 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
     public void addItem() {
         adapter.notifyItemInserted(adapter.getItemCount() - 1);
         adapter.notifyItemRangeChanged(2, adapter.getItemCount());
+    }
+
+    @Override
+    public void showInputDialog(final Data data) {
+        LayoutInflater inflater = getLayoutInflater();
+        @SuppressLint("InflateParams")
+        View view = inflater.inflate(R.layout.input_region, null);
+        final EditText text = (EditText) view.findViewById(R.id.text);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(view)
+                .create();
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (text != null) {
+                    String title = text.getText().toString().trim();
+                    if (!title.isEmpty()) {
+                        data.setDesc(text.getText().toString());
+                        presenter.addToFavourite(data);
+                    }
+                }
+            }
+        });
+        dialog.show();
     }
 }

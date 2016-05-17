@@ -89,6 +89,10 @@ public class Data implements Parcelable {
         this.favoured = favoured;
     }
 
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

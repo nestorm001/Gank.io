@@ -1,5 +1,6 @@
 package nesto.gankio.ui.activity.favourite;
 
+import nesto.gankio.model.Data;
 import nesto.gankio.ui.MvpView;
 
 /**
@@ -8,4 +9,6 @@ import nesto.gankio.ui.MvpView;
  */
 public interface FavouriteMvpView extends MvpView {
     void addItem();
+
+    void showInputDialog(Data data);
 }

@@ -51,7 +51,12 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
             title = (title == null || title.isEmpty()) ? content.substring(0, position) : title;
             String url = content.substring(position, content.length());
             String id = Integer.toHexString(AppUtil.getCurrentTime().hashCode());
-            addToFavourite(new Data(id, title, url, C.FROM_SHARE));
+            Data data = new Data(id, title, url, C.FROM_SHARE);
+            if (title.trim().isEmpty()) {
+                view.showInputDialog(data);
+            } else {
+                addToFavourite(data);
+            }
         } else {
             AppUtil.showToast(A.getContext().getString(R.string.not_supported));
         }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="80dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp">
+
+    <EditText
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="@string/input_hint"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:textColor="@color/Text_1"
+        android:textColorHint="@color/Text_3"
+        android:textSize="@dimen/normal_text_size" />
+</android.support.design.widget.TextInputLayout>
