@@ -126,7 +126,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     private void setProgressAnimation(int newProgress) {
         progressBar.setVisibility(View.VISIBLE);
         int oldProgress = progressBar.getProgress();
-        int duration = (newProgress - oldProgress) * 30;
+        int duration = (newProgress - oldProgress) * ((100 - newProgress) / 20 + 2) * 10;
         duration = duration < 0 ? 0 : duration;
         progressAnimator = ObjectAnimator.ofInt(progressBar, "progress", oldProgress, newProgress)
                 .setDuration(duration);
