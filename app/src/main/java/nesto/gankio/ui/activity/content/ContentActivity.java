@@ -1,5 +1,8 @@
 package nesto.gankio.ui.activity.content;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -10,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -57,6 +60,8 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     private ContentPresenter presenter;
     private Data data;
 
+    private ObjectAnimator progressAnimator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,8 +85,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                progressBar.setProgress(newProgress);
-                progressBar.setVisibility(progressBar.getProgress() == 100 ? View.GONE : View.VISIBLE);
+                setProgressAnimation(newProgress);
             }
 
             @Override
@@ -104,8 +108,31 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);  //设置 缓存模式
         settings.setDatabaseEnabled(true);
         settings.setAppCacheEnabled(true);
+    }
 
-        progressBar.setInterpolator(new LinearInterpolator());
+    private void setProgressCompleteListener() {
+        progressAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (progressBar.getProgress() == 100) {
+                    progressBar.setVisibility(View.GONE);
+                    progressAnimator.removeAllListeners();
+                }
+            }
+        });
+    }
+
+    private void setProgressAnimation(int newProgress) {
+        progressBar.setVisibility(View.VISIBLE);
+        int oldProgress = progressBar.getProgress();
+        int duration = (newProgress - oldProgress) * 30;
+        duration = duration < 0 ? 0 : duration;
+        progressAnimator = ObjectAnimator.ofInt(progressBar, "progress", oldProgress, newProgress)
+                .setDuration(duration);
+        setProgressCompleteListener();
+        progressAnimator.setInterpolator(new AccelerateInterpolator());
+        progressAnimator.start();
     }
 
     private void initAppBarLayout() {

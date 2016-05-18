@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
@@ -23,11 +24,14 @@
 
     <ProgressBar
         android:id="@+id/progress"
-        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="3dp"
+        android:indeterminate="false"
+        android:indeterminateOnly="false"
         android:max="100"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:progressDrawable="@drawable/progress"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:progress="50" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/refresh"
