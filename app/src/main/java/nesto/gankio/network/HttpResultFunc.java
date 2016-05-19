@@ -58,7 +58,7 @@ public class HttpResultFunc<T> implements Func1<Result<T>, T> {
         } else if (error instanceof SocketTimeoutException) {
             throw new InternetException(context.getString(R.string.time_out));
         } else {
-            throw new InternetException(context.getString(R.string.unknown_error));
+            throw new InternetException(error.getLocalizedMessage());
         }
     }
 }
