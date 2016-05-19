@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/view_image"
-        android:icon="@drawable/ic_action_for_fun"
+        android:icon="@color/Transparent"
         android:title="@string/fun"
         android:visible="false"
         app:showAsAction="always"
