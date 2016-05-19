@@ -34,9 +34,18 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.image_view.ImageViewActivity"
+            android:label="image"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:icon="@drawable/ic_action_for_fun"
+            android:taskAffinity="nesto.gankio.image">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activity.favourite.FavouriteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
