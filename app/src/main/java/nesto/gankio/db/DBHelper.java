@@ -109,8 +109,6 @@ public class DBHelper {
         ContentValues values = new ContentValues();
         values.put(C.ID, data.get_id());
         values.put(C.VALUE, toJson(data));
-//        values.put(C.ID, AppUtil.getCurrentTime() + order);
-//        values.put(C.VALUE, AppUtil.getCurrentTime());
         values.put(C.ORDER, order);
         return values;
     }

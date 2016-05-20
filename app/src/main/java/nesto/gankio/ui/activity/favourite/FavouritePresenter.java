@@ -50,7 +50,7 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
             int position = content.indexOf("http");
             title = (title == null || title.isEmpty()) ? content.substring(0, position) : title;
             String url = content.substring(position, content.length());
-            String id = Integer.toHexString(AppUtil.getCurrentTime().hashCode());
+            String id = AppUtil.getCurrentTime() + Integer.toHexString(url.hashCode());
             Data data = new Data(id, title, url, C.FROM_SHARE);
             if (title.trim().isEmpty()) {
                 view.showInputDialog(data);
