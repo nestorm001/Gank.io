@@ -194,7 +194,6 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()) {
-            //可以后退，暂时不需要
             webView.goBack();
         } else {
             super.onBackPressed();
@@ -235,6 +234,9 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
             case R.id.favourite:
                 onFavouriteClicked();
                 break;
