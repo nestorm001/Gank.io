@@ -17,12 +17,10 @@ import android.widget.EditText;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.LandingAnimator;
 import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
-import nesto.gankio.util.LogUtil;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -78,8 +76,6 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        recyclerView.setItemAnimator(new LandingAnimator());
-
         dealSwipeAndDrag();
     }
 
@@ -120,7 +116,8 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
                         .doOnCompleted(new Action0() {
                             @Override
                             public void call() {
-                                adapter.notifyDataSetChanged();
+                                adapter.notifyItemRemoved(position);
+                                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
                             }
                         })
                         .subscribe();
@@ -132,7 +129,7 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
 
     @Override
     public void addItem() {
-        adapter.notifyItemInserted(1);
+        adapter.notifyItemInserted(0);
         adapter.notifyItemRangeChanged(1, adapter.getItemCount());
     }
 

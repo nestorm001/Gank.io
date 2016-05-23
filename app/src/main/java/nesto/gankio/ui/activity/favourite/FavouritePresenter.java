@@ -23,6 +23,7 @@ import rx.functions.Action1;
 public class FavouritePresenter implements Presenter<FavouriteMvpView> {
 
     private FavouriteMvpView view;
+    private boolean isLoad = false;
 
     @Override
     public void attachView(FavouriteMvpView view) {
@@ -48,23 +49,29 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     }
 
     public void loadFavourite(final Intent intent) {
-        DBHelper.getInstance()
-                .getAll()
-                .subscribe(new Action1<ArrayList<Data>>() {
-                    @Override
-                    public void call(ArrayList<Data> datas) {
-                        LogUtil.d("收藏夹加载完成");
-                        dealWithIntent(intent);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        LogUtil.e(throwable.getLocalizedMessage());
-                        if (throwable instanceof DBException && throwable.getMessage().equals("no result")) {
+        if (isLoad) {
+            dealWithIntent(intent);
+        } else {
+            DBHelper.getInstance()
+                    .getAll()
+                    .subscribe(new Action1<ArrayList<Data>>() {
+                        @Override
+                        public void call(ArrayList<Data> datas) {
+                            LogUtil.d("收藏夹加载完成");
                             dealWithIntent(intent);
+                            isLoad = true;
                         }
-                    }
-                }).unsubscribe();
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            LogUtil.e(throwable.getLocalizedMessage());
+                            if (throwable instanceof DBException && throwable.getMessage().equals("no result")) {
+                                dealWithIntent(intent);
+                                isLoad = true;
+                            }
+                        }
+                    }).unsubscribe();
+        }
     }
 
     private void handleText(Intent intent) {
