@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="nesto.gankio">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".global.A"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:name">
         <activity
             android:name=".ui.activity.main.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -34,11 +36,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.image_view.ImageViewActivity"
-            android:label="image"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:icon="@drawable/ic_action_for_fun"
+            android:label="image"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:icon="@drawable/ic_action_for_fun"
             android:taskAffinity="nesto.gankio.image">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
