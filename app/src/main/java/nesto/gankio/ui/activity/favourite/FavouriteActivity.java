@@ -24,6 +24,7 @@ import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
+import rx.Subscriber;
 
 /**
  * Created on 2016/5/14.
@@ -38,6 +39,7 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
 
     private FavouritePresenter presenter;
     private FavouriteAdapter adapter;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +60,13 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
         presenter.attachView(this);
         adapter = new FavouriteAdapter(this, DBHelper.getInstance().getFavouriteList());
         setTitle(getString(R.string.favourite_list));
-        presenter.dealWithIntent(getIntent());
+        presenter.loadFavourite(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        presenter.dealWithIntent(intent);
+        presenter.loadFavourite(intent);
     }
 
     private void initView() {
@@ -79,8 +81,7 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
 
         recyclerView.setItemAnimator(new LandingAnimator());
 
-        //TODO deal with db
-//        dealSwipeAndDrag();
+        dealSwipeAndDrag();
     }
 
     @Override
@@ -94,8 +95,8 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
                 ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                int fromPosition = viewHolder.getAdapterPosition();//得到拖动ViewHolder的position
-                int toPosition = target.getAdapterPosition();//得到目标ViewHolder的position
+                final int fromPosition = viewHolder.getAdapterPosition();//得到拖动ViewHolder的position
+                final int toPosition = target.getAdapterPosition();//得到目标ViewHolder的position
                 if (fromPosition < toPosition) {
                     //分别把中间所有的item的位置重新交换
                     for (int i = fromPosition; i < toPosition; i++) {
@@ -106,6 +107,33 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
                         Collections.swap(adapter.getList(), i, i - 1);
                     }
                 }
+                DBHelper.getInstance()
+                        .move(fromPosition, toPosition)
+                        .subscribe(new Subscriber<Object>() {
+                            @Override
+                            public void onCompleted() {
+                                
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                if (fromPosition < toPosition) {
+                                    //分别把中间所有的item的位置重新交换
+                                    for (int i = fromPosition; i < toPosition; i++) {
+                                        Collections.swap(adapter.getList(), i + 1, i);
+                                    }
+                                } else {
+                                    for (int i = fromPosition; i > toPosition; i--) {
+                                        Collections.swap(adapter.getList(), i - 1, i);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onNext(Object o) {
+
+                            }
+                        });
                 adapter.notifyItemMoved(fromPosition, toPosition);
                 return true;
             }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import nesto.gankio.global.C;
 import nesto.gankio.model.Data;
 import nesto.gankio.network.HttpMethods;
+import nesto.gankio.util.LogUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -25,7 +26,6 @@ public class DBHelper {
     private Gson gson;
     private BriteDatabase db;
     private ArrayList<Data> favouriteList;
-    private int favouriteNum;
 
     private DBHelper() {
         gson = new Gson();
@@ -48,7 +48,7 @@ public class DBHelper {
                 favouriteList.add(data);
                 BriteDatabase.Transaction transaction = db.newTransaction();
                 try {
-                    db.insert(C.FAVOURITE_TABLE, makeData(1, data));
+                    db.insert(C.FAVOURITE_TABLE, makeData(favouriteList.size() - 1, data));
                     transaction.markSuccessful();
                 } finally {
                     transaction.end();
@@ -62,11 +62,43 @@ public class DBHelper {
         return Observable.create(new Observable.OnSubscribe<Object>() {
             @Override
             public void call(Subscriber<? super Object> subscriber) {
+                int start = favouriteList.indexOf(data);
                 favouriteList.remove(data);
+                int end = favouriteList.size();
                 BriteDatabase.Transaction transaction = db.newTransaction();
                 try {
-                    //TODO order
+                    //ugly
                     db.delete(C.FAVOURITE_TABLE, C.ID + " = '" + data.get_id() + "'");
+                    for (int i = start; i < end; i++) {
+                        db.update(C.FAVOURITE_TABLE,
+                                makeData(i, favouriteList.get(i)),
+                                C.ID + " = '" + favouriteList.get(i).get_id() + "'");
+                    }
+                    transaction.markSuccessful();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LogUtil.d(e.getLocalizedMessage());
+                } finally {
+                    transaction.end();
+                    subscriber.onCompleted();
+                }
+            }
+        }).compose(HttpMethods.getInstance().setThreads());
+    }
+
+    public Observable<Object> move(final int from, final int to) {
+        return Observable.create(new Observable.OnSubscribe<Object>() {
+            @Override
+            public void call(Subscriber<? super Object> subscriber) {
+                BriteDatabase.Transaction transaction = db.newTransaction();
+                try {
+                    int start = from < to ? from : to;
+                    int end = from > to ? from : to;
+                    for (int i = start; i < end + 1; i++) {
+                        db.update(C.FAVOURITE_TABLE,
+                                makeData(i, favouriteList.get(i)),
+                                C.ID + " = '" + favouriteList.get(i).get_id() + "'");
+                    }
                     transaction.markSuccessful();
                 } finally {
                     transaction.end();
@@ -76,16 +108,11 @@ public class DBHelper {
         }).compose(HttpMethods.getInstance().setThreads());
     }
 
-    public void move(int from, int to) {
-        //TODO
-    }
-
     public boolean isExist(Data data) {
         return favouriteList.contains(data);
     }
 
     public Observable<ArrayList<Data>> getAll() {
-        favouriteList.clear();
         return db.createQuery(C.FAVOURITE_TABLE, "SELECT * FROM " + C.FAVOURITE_TABLE +
                 " ORDER BY " + C.ORDER)
                 .map(new Func1<SqlBrite.Query, ArrayList<Data>>() {
@@ -95,7 +122,7 @@ public class DBHelper {
                         if (cursor == null || !cursor.moveToFirst()) {
                             throw new DBException("no result");
                         }
-                        favouriteNum = cursor.getCount();
+                        favouriteList.clear();
                         do {
                             int name = cursor.getColumnIndex(C.VALUE);
                             favouriteList.add(toData(cursor.getString(name)));

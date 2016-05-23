@@ -2,6 +2,8 @@ package nesto.gankio.ui.activity.favourite;
 
 import android.content.Intent;
 
+import java.util.ArrayList;
+
 import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.global.A;
@@ -11,6 +13,7 @@ import nesto.gankio.ui.Presenter;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
 import rx.Subscriber;
+import rx.functions.Action1;
 
 /**
  * Created on 2016/5/14.
@@ -41,6 +44,23 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
                 handleImage(intent); // 处理发送来的图片
             }
         }
+    }
+
+    public void loadFavourite(final Intent intent) {
+        DBHelper.getInstance()
+                .getAll()
+                .subscribe(new Action1<ArrayList<Data>>() {
+                    @Override
+                    public void call(ArrayList<Data> datas) {
+                        LogUtil.d("收藏夹加载完成");
+                        dealWithIntent(intent);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtil.e(throwable.getLocalizedMessage());
+                    }
+                }).unsubscribe();
     }
 
     private void handleText(Intent intent) {
