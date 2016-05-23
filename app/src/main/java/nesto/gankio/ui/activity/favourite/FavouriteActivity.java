@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 
-import java.util.Collections;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
@@ -24,7 +22,6 @@ import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
-import rx.Subscriber;
 
 /**
  * Created on 2016/5/14.
@@ -39,7 +36,6 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
 
     private FavouritePresenter presenter;
     private FavouriteAdapter adapter;
-    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,43 +93,11 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 final int fromPosition = viewHolder.getAdapterPosition();//得到拖动ViewHolder的position
                 final int toPosition = target.getAdapterPosition();//得到目标ViewHolder的position
-                if (fromPosition < toPosition) {
-                    //分别把中间所有的item的位置重新交换
-                    for (int i = fromPosition; i < toPosition; i++) {
-                        Collections.swap(adapter.getList(), i, i + 1);
-                    }
-                } else {
-                    for (int i = fromPosition; i > toPosition; i--) {
-                        Collections.swap(adapter.getList(), i, i - 1);
-                    }
-                }
+                final Data from = adapter.getList().remove(fromPosition);
+                adapter.getList().add(toPosition, from);
                 DBHelper.getInstance()
                         .move(fromPosition, toPosition)
-                        .subscribe(new Subscriber<Object>() {
-                            @Override
-                            public void onCompleted() {
-                                
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                if (fromPosition < toPosition) {
-                                    //分别把中间所有的item的位置重新交换
-                                    for (int i = fromPosition; i < toPosition; i++) {
-                                        Collections.swap(adapter.getList(), i + 1, i);
-                                    }
-                                } else {
-                                    for (int i = fromPosition; i > toPosition; i--) {
-                                        Collections.swap(adapter.getList(), i - 1, i);
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onNext(Object o) {
-
-                            }
-                        });
+                        .subscribe();
                 adapter.notifyItemMoved(fromPosition, toPosition);
                 return true;
             }

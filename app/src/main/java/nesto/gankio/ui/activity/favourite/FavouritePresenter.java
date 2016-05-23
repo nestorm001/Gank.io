@@ -5,6 +5,7 @@ import android.content.Intent;
 import java.util.ArrayList;
 
 import nesto.gankio.R;
+import nesto.gankio.db.DBException;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.global.A;
 import nesto.gankio.global.C;
@@ -59,6 +60,9 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtil.e(throwable.getLocalizedMessage());
+                        if (throwable instanceof DBException && throwable.getMessage().equals("no result")) {
+                            dealWithIntent(intent);
+                        }
                     }
                 }).unsubscribe();
     }
