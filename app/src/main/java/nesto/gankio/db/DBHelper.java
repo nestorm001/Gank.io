@@ -45,7 +45,7 @@ public class DBHelper {
         return Observable.create(new Observable.OnSubscribe<Object>() {
             @Override
             public void call(Subscriber<? super Object> subscriber) {
-                favouriteList.add(data);
+                favouriteList.add(0, data);
                 BriteDatabase.Transaction transaction = db.newTransaction();
                 try {
                     db.insert(C.FAVOURITE_TABLE, makeData(favouriteList.size() - 1, data));
@@ -69,9 +69,9 @@ public class DBHelper {
                 try {
                     //ugly
                     db.delete(C.FAVOURITE_TABLE, C.ID + " = '" + data.get_id() + "'");
-                    for (int i = start; i < end; i++) {
+                    for (int i = 0; i < start; i++) {
                         db.update(C.FAVOURITE_TABLE,
-                                makeData(i, favouriteList.get(i)),
+                                makeData(end - 1 - i, favouriteList.get(i)),
                                 C.ID + " = '" + favouriteList.get(i).get_id() + "'");
                     }
                     transaction.markSuccessful();
@@ -96,10 +96,13 @@ public class DBHelper {
                     int end = from > to ? from : to;
                     for (int i = start; i < end + 1; i++) {
                         db.update(C.FAVOURITE_TABLE,
-                                makeData(i, favouriteList.get(i)),
+                                makeData(favouriteList.size() - i - 1, favouriteList.get(i)),
                                 C.ID + " = '" + favouriteList.get(i).get_id() + "'");
                     }
                     transaction.markSuccessful();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LogUtil.d(e.getLocalizedMessage());
                 } finally {
                     transaction.end();
                     subscriber.onCompleted();
@@ -114,7 +117,7 @@ public class DBHelper {
 
     public Observable<ArrayList<Data>> getAll() {
         return db.createQuery(C.FAVOURITE_TABLE, "SELECT * FROM " + C.FAVOURITE_TABLE +
-                " ORDER BY " + C.ORDER)
+                " ORDER BY " + C.ORDER + " DESC")
                 .map(new Func1<SqlBrite.Query, ArrayList<Data>>() {
                     @Override
                     public ArrayList<Data> call(SqlBrite.Query query) {

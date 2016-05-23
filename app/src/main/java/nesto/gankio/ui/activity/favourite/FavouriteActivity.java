@@ -22,6 +22,9 @@ import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
+import nesto.gankio.util.LogUtil;
+import rx.functions.Action0;
+import rx.functions.Action1;
 
 /**
  * Created on 2016/5/14.
@@ -104,10 +107,23 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                adapter.getList().remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                final int position = viewHolder.getAdapterPosition();
+                final Data data = adapter.getList().get(position);
+                DBHelper.getInstance()
+                        .remove(data)
+                        .doOnError(new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                adapter.getList().add(position, data);
+                            }
+                        })
+                        .doOnCompleted(new Action0() {
+                            @Override
+                            public void call() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .subscribe();
             }
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(callBack);
@@ -116,8 +132,8 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
 
     @Override
     public void addItem() {
-        adapter.notifyItemInserted(adapter.getItemCount() - 1);
-        adapter.notifyItemRangeChanged(2, adapter.getItemCount());
+        adapter.notifyItemInserted(1);
+        adapter.notifyItemRangeChanged(1, adapter.getItemCount());
     }
 
     @Override
