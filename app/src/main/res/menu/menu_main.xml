@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/view_image"
-        android:icon="@color/Transparent"
+        android:icon="@drawable/circle_primary_selector"
         android:title="@string/fun"
         android:visible="false"
         app:showAsAction="always"
         tools:visible="true" />
     <item
         android:id="@+id/share"
-        android:icon="@drawable/ic_action_share"
+        android:icon="@drawable/action_share"
         android:title="@string/send_to"
         android:visible="false"
         app:showAsAction="always"
         tools:visible="true" />
     <item
         android:id="@+id/favourite"
-        android:icon="@drawable/ic_action_favourited"
+        android:icon="@drawable/action_favourited"
         android:title="@string/favourite"
         app:showAsAction="always" />
 </menu>

@@ -96,6 +96,12 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
                 adapter.getList().add(toPosition, from);
                 DBHelper.getInstance()
                         .move(fromPosition, toPosition)
+                        .doOnError(new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                //TODO
+                            }
+                        })
                         .subscribe();
                 adapter.notifyItemMoved(fromPosition, toPosition);
                 return true;

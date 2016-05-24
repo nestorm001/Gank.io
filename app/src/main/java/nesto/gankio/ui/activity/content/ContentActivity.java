@@ -214,9 +214,9 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     @Override
     public void setFavourite(Data data) {
         if (data != null && data.isFavoured()) {
-            favourite.setIcon(R.drawable.ic_action_favourited);
+            favourite.setIcon(R.drawable.action_favourited);
         } else {
-            favourite.setIcon(R.drawable.ic_action_favourite);
+            favourite.setIcon(R.drawable.action_favourite);
         }
     }
 
@@ -224,8 +224,10 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        
         MenuItem share = menu.findItem(R.id.share);
         share.setVisible(true);
+        
         favourite = menu.findItem(R.id.favourite);
         setFavourite(data);
         return super.onCreateOptionsMenu(menu);
