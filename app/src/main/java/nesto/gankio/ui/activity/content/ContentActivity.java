@@ -196,7 +196,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         if (webView.canGoBack()) {
             webView.goBack();
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 
