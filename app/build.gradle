@@ -9,13 +9,13 @@ def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getDefaul
 def commitHead = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
 def versionMajor = 0
-def versionMinor = 0
+def versionMinor = 1
 def versionPatch = 0
 def versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "nesto.gankio"
@@ -58,7 +58,7 @@ android {
                 variant.outputs.each { output ->
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        def fileName = "idle_the_way_release_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        def fileName = "${applicationId}_release_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }
@@ -95,3 +95,9 @@ repositories {
     mavenCentral()
 }
 
+def props = new Properties()
+props.load(new FileInputStream(rootProject.file("release.properties")))
+android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
+android.signingConfigs.release.storePassword props.keyStorePassword
+android.signingConfigs.release.keyAlias props.keyAlias
+android.signingConfigs.release.keyPassword props.keyAliasPassword
