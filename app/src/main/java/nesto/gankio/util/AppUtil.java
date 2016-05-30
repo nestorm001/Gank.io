@@ -190,30 +190,13 @@ public class AppUtil {
 
 
     private static void shareImage(final Data data, final Context context) {
-        Observable.create(new Observable.OnSubscribe<Bitmap>() {
-            @Override
-            public void call(Subscriber<? super Bitmap> subscriber) {
-                try {
-                    Bitmap bitmap = Picasso.with(context).load(data.getUrl()).get();
-                    subscriber.onNext(bitmap);
-                    subscriber.onCompleted();
-                } catch (IOException e) {
-                    subscriber.onError(e);
-                }
-            }
-        })
+        createBitmapObservable(data.getUrl(), context)
                 .map(new Func1<Bitmap, Uri>() {
                     @Override
                     public Uri call(Bitmap bitmap) {
                         Uri bmpUri;
                         try {
-                            File file = new File(context.getCacheDir() + File.separator + "images",
-                                    "image.png");
-                            //noinspection ResultOfMethodCallIgnored
-                            file.getParentFile().mkdirs();
-                            FileOutputStream out = new FileOutputStream(file);
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                            out.close();
+                            File file = saveBitmapFile(context, "image", bitmap);
                             bmpUri = FileProvider.getUriForFile(context, "nesto.gankio.fileprovider", file);
                         } catch (IOException e) {
                             throw Exceptions.propagate(e);
@@ -249,5 +232,31 @@ public class AppUtil {
                         context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
                     }
                 });
+    }
+
+    public static Observable<Bitmap> createBitmapObservable(final String url, final Context context) {
+        return Observable.create(new Observable.OnSubscribe<Bitmap>() {
+            @Override
+            public void call(Subscriber<? super Bitmap> subscriber) {
+                try {
+                    Bitmap bitmap = Picasso.with(context).load(url).get();
+                    subscriber.onNext(bitmap);
+                    subscriber.onCompleted();
+                } catch (IOException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
+    public static File saveBitmapFile(Context context, String imageName, Bitmap bitmap) throws IOException {
+        File file = new File(context.getCacheDir() + File.separator + "images",
+                imageName + ".png");
+        //noinspection ResultOfMethodCallIgnored
+        file.getParentFile().mkdirs();
+        FileOutputStream out = new FileOutputStream(file);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+        out.close();
+        return file;
     }
 }

@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -21,7 +18,6 @@ import nesto.gankio.model.DataType;
 import nesto.gankio.ui.Presenter;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
@@ -116,30 +112,13 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     }
 
     private void saveImage(final Uri uri) {
-        Observable.create(new Observable.OnSubscribe<Bitmap>() {
-            @Override
-            public void call(Subscriber<? super Bitmap> subscriber) {
-                try {
-                    Bitmap bitmap = Picasso.with(view.getContext()).load(uri).get();
-                    subscriber.onNext(bitmap);
-                    subscriber.onCompleted();
-                } catch (IOException e) {
-                    subscriber.onError(e);
-                }
-            }
-        })
+        AppUtil.createBitmapObservable(uri.toString(), view.getContext())
                 .map(new Func1<Bitmap, Uri>() {
                     @Override
                     public Uri call(Bitmap bitmap) {
                         Uri bmpUri;
                         try {
-                            File file = new File(view.getContext().getCacheDir() + File.separator + "images",
-                                    AppUtil.getCurrentTime() + ".png");
-                            //noinspection ResultOfMethodCallIgnored
-                            file.getParentFile().mkdirs();
-                            FileOutputStream out = new FileOutputStream(file);
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                            out.close();
+                            File file = AppUtil.saveBitmapFile(view.getContext(), AppUtil.getCurrentTime(), bitmap);
                             bmpUri = Uri.fromFile(file);
                         } catch (IOException e) {
                             throw Exceptions.propagate(e);
