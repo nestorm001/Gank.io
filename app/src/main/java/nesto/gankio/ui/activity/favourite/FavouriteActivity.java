@@ -28,7 +28,9 @@ import rx.Subscriber;
  * Created on 2016/5/14.
  * By nesto
  */
-public class FavouriteActivity extends ActionBarActivity implements FavouriteMvpView {
+public class FavouriteActivity extends ActionBarActivity
+        implements FavouriteMvpView,
+        FavouriteAdapter.OnDeleteListener {
 
     @Bind(R.id.list)
     RecyclerView recyclerView;
@@ -56,6 +58,7 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
         presenter = new FavouritePresenter();
         presenter.attachView(this);
         adapter = new FavouriteAdapter(this, DBHelper.getInstance().getFavouriteList());
+        adapter.setOnDeleteListener(this);
         setTitle(getString(R.string.favourite_list));
         presenter.loadFavourite(getIntent());
     }
@@ -128,12 +131,7 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
                             @Override
                             public void onCompleted() {
                                 adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-                                showSnackbar(recyclerView, getString(R.string.need_cancel_hint), getString(R.string.cancel), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        presenter.addToFavourite(data);
-                                    }
-                                });
+                                showSnackbar(data);
                             }
 
                             @Override
@@ -157,7 +155,8 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
     @Override
     public void addItem() {
         adapter.notifyItemInserted(0);
-        adapter.notifyItemRangeChanged(1, adapter.getItemCount());
+        recyclerView.smoothScrollToPosition(0);
+//        adapter.notifyItemRangeChanged(1, adapter.getItemCount());
     }
 
     @Override
@@ -182,5 +181,19 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void onDelete(Data data) {
+        showSnackbar(data);
+    }
+    
+    private void showSnackbar(final Data data) {
+        showSnackbar(recyclerView, getString(R.string.need_cancel_hint), getString(R.string.cancel), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.addToFavourite(data);
+            }
+        });
     }
 }

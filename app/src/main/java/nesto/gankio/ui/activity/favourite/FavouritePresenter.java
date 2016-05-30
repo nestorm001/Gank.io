@@ -1,8 +1,14 @@
 package nesto.gankio.ui.activity.favourite;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import nesto.gankio.R;
@@ -15,9 +21,14 @@ import nesto.gankio.model.DataType;
 import nesto.gankio.ui.Presenter;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.Exceptions;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created on 2016/5/14.
@@ -99,10 +110,63 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     private void handleImage(Intent intent) {
         Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
-            String id = AppUtil.getCurrentTime() + Integer.toHexString(imageUri.toString().hashCode());
-            Data data = new Data(id, "", imageUri.toString(), DataType.BENEFIT.toString());
-            addToFavourite(data);
+            LogUtil.d("handleImage " + imageUri.toString());
+            saveImage(imageUri);
         }
+    }
+
+    private void saveImage(final Uri uri) {
+        Observable.create(new Observable.OnSubscribe<Bitmap>() {
+            @Override
+            public void call(Subscriber<? super Bitmap> subscriber) {
+                try {
+                    Bitmap bitmap = Picasso.with(view.getContext()).load(uri).get();
+                    subscriber.onNext(bitmap);
+                    subscriber.onCompleted();
+                } catch (IOException e) {
+                    subscriber.onError(e);
+                }
+            }
+        })
+                .map(new Func1<Bitmap, Uri>() {
+                    @Override
+                    public Uri call(Bitmap bitmap) {
+                        Uri bmpUri;
+                        try {
+                            File file = new File(view.getContext().getCacheDir() + File.separator + "images",
+                                    AppUtil.getCurrentTime() + ".png");
+                            //noinspection ResultOfMethodCallIgnored
+                            file.getParentFile().mkdirs();
+                            FileOutputStream out = new FileOutputStream(file);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                            out.close();
+                            bmpUri = Uri.fromFile(file);
+                        } catch (IOException e) {
+                            throw Exceptions.propagate(e);
+                        }
+                        return bmpUri;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Uri>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        AppUtil.showToast(e.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onNext(Uri uri) {
+                        String id = AppUtil.getCurrentTime() + Integer.toHexString(uri.toString().hashCode());
+                        Data data = new Data(id, "", uri.toString(), DataType.BENEFIT.toString());
+                        addToFavourite(data);
+                    }
+                });
     }
 
     public void addToFavourite(final Data data) {

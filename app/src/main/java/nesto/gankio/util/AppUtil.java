@@ -208,11 +208,11 @@ public class AppUtil {
                         Uri bmpUri;
                         try {
                             File file = new File(context.getCacheDir() + File.separator + "images",
-                                    "/image.jpeg");
+                                    "image.png");
                             //noinspection ResultOfMethodCallIgnored
                             file.getParentFile().mkdirs();
                             FileOutputStream out = new FileOutputStream(file);
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                             out.close();
                             bmpUri = FileProvider.getUriForFile(context, "nesto.gankio.fileprovider", file);
                         } catch (IOException e) {

@@ -33,6 +33,9 @@ public class FavouriteAdapter extends NormalAdapter {
                         data.setFavoured(true);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, getItemCount());
+                        if (onDeleteListener != null) {
+                            onDeleteListener.onDelete(data);
+                        }
                     }
 
                     @Override
@@ -48,5 +51,15 @@ public class FavouriteAdapter extends NormalAdapter {
 
                     }
                 });
+    }
+
+    public interface OnDeleteListener {
+        void onDelete(Data data);
+    }
+
+    private OnDeleteListener onDeleteListener;
+
+    public void setOnDeleteListener(OnDeleteListener onDeleteListener) {
+        this.onDeleteListener = onDeleteListener;
     }
 }
