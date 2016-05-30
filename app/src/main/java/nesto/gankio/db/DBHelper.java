@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import nesto.gankio.global.C;
 import nesto.gankio.model.Data;
 import nesto.gankio.network.HttpMethods;
-import nesto.gankio.util.LogUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -74,10 +73,10 @@ public class DBHelper {
                                 makeData(end - 1 - i, favouriteList.get(i)),
                                 C.ID + " = '" + favouriteList.get(i).get_id() + "'");
                     }
+//                    throw new RuntimeException("hehe");
                     transaction.markSuccessful();
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    LogUtil.d(e.getLocalizedMessage());
+                    subscriber.onError(e);
                 } finally {
                     transaction.end();
                     subscriber.onCompleted();
@@ -99,10 +98,10 @@ public class DBHelper {
                                 makeData(favouriteList.size() - i - 1, favouriteList.get(i)),
                                 C.ID + " = '" + favouriteList.get(i).get_id() + "'");
                     }
+//                    throw new RuntimeException("hehe");
                     transaction.markSuccessful();
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    LogUtil.d(e.getLocalizedMessage());
+                    subscriber.onError(e);
                 } finally {
                     transaction.end();
                     subscriber.onCompleted();

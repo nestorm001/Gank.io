@@ -21,8 +21,8 @@ import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
-import rx.functions.Action0;
-import rx.functions.Action1;
+import nesto.gankio.util.AppUtil;
+import rx.Subscriber;
 
 /**
  * Created on 2016/5/14.
@@ -96,14 +96,24 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
                 adapter.getList().add(toPosition, from);
                 DBHelper.getInstance()
                         .move(fromPosition, toPosition)
-                        .doOnError(new Action1<Throwable>() {
+                        .subscribe(new Subscriber<Object>() {
                             @Override
-                            public void call(Throwable throwable) {
-                                //TODO
+                            public void onCompleted() {
+                                adapter.notifyItemMoved(fromPosition, toPosition);
                             }
-                        })
-                        .subscribe();
-                adapter.notifyItemMoved(fromPosition, toPosition);
+
+                            @Override
+                            public void onError(Throwable e) {
+                                AppUtil.showToast(getString(R.string.swap_failed));
+                                adapter.getList().remove(from);
+                                adapter.getList().add(fromPosition, from);
+                            }
+
+                            @Override
+                            public void onNext(Object o) {
+
+                            }
+                        });
                 return true;
             }
 
@@ -111,22 +121,27 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 final int position = viewHolder.getAdapterPosition();
                 final Data data = adapter.getList().get(position);
+                adapter.notifyItemRemoved(position);
                 DBHelper.getInstance()
                         .remove(data)
-                        .doOnError(new Action1<Throwable>() {
+                        .subscribe(new Subscriber<Object>() {
                             @Override
-                            public void call(Throwable throwable) {
-                                adapter.getList().add(position, data);
-                            }
-                        })
-                        .doOnCompleted(new Action0() {
-                            @Override
-                            public void call() {
-                                adapter.notifyItemRemoved(position);
+                            public void onCompleted() {
                                 adapter.notifyItemRangeChanged(position, adapter.getItemCount());
                             }
-                        })
-                        .subscribe();
+
+                            @Override
+                            public void onError(Throwable e) {
+                                AppUtil.showToast(getString(R.string.delete_failed));
+                                adapter.getList().add(position, data);
+                                adapter.notifyItemInserted(position);
+                            }
+
+                            @Override
+                            public void onNext(Object o) {
+
+                            }
+                        });
             }
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(callBack);

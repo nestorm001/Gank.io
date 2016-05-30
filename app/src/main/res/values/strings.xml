@@ -23,4 +23,6 @@
     <string name="favourite_list">收藏夹</string>
     <string name="not_supported">Not supported</string>
     <string name="input_hint">请输入收藏标题</string>
+    <string name="delete_failed">delete failed</string>
+    <string name="swap_failed">swap failed</string>
 </resources>
