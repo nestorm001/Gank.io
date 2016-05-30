@@ -48,7 +48,10 @@ public class DBHelper {
                 BriteDatabase.Transaction transaction = db.newTransaction();
                 try {
                     db.insert(C.FAVOURITE_TABLE, makeData(favouriteList.size() - 1, data));
+//                    throw new RuntimeException("hehe");
                     transaction.markSuccessful();
+                } catch (Exception e) {
+                    subscriber.onError(e);
                 } finally {
                     transaction.end();
                     subscriber.onCompleted();

@@ -37,7 +37,6 @@ import nesto.gankio.util.AppUtil;
 /**
  * Created on 2016/5/11.
  * By nesto
- * TODO a lot more to do
  */
 public class ContentActivity extends ActionBarActivity implements ContentMvpView {
 

@@ -1,6 +1,7 @@
 package nesto.gankio.ui.activity.favourite;
 
 import android.content.Intent;
+import android.net.Uri;
 
 import java.util.ArrayList;
 
@@ -10,11 +11,12 @@ import nesto.gankio.db.DBHelper;
 import nesto.gankio.global.A;
 import nesto.gankio.global.C;
 import nesto.gankio.model.Data;
+import nesto.gankio.model.DataType;
 import nesto.gankio.ui.Presenter;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
-import rx.Subscriber;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created on 2016/5/14.
@@ -94,29 +96,32 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     }
 
     private void handleImage(Intent intent) {
-        //TODO
-        AppUtil.showToast("TODO");
+        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUri != null) {
+            //TODO should save the image in app ?
+            String id = AppUtil.getCurrentTime() + Integer.toHexString(imageUri.toString().hashCode());
+            Data data = new Data(id, "", imageUri.toString(), DataType.BENEFIT.toString());
+            addToFavourite(data);
+        }
     }
 
     public void addToFavourite(final Data data) {
         DBHelper.getInstance()
                 .add(data)
-                .subscribe(new Subscriber<Object>() {
+                .doOnError(new Action1<Throwable>() {
                     @Override
-                    public void onCompleted() {
-                        view.addItem();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LogUtil.d(e.getLocalizedMessage());
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
                         AppUtil.showToast(A.getContext().getString(R.string.fail_to_add_to_favourite));
+                        DBHelper.getInstance().getFavouriteList().remove(0);
                     }
-
+                })
+                .onErrorReturn(new Func1<Throwable, Object>() {
                     @Override
-                    public void onNext(Object o) {
-
+                    public Object call(Throwable throwable) {
+                        return null;
                     }
-                });
+                })
+                .subscribe();
     }
 }

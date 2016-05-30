@@ -20,7 +20,8 @@ import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.content.ContentActivity;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
-import rx.Subscriber;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created on 2016/5/9.
@@ -145,49 +146,43 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     protected void addToFavourite(final Data data, final NormalViewHolder viewHolder, int position) {
         DBHelper.getInstance()
                 .add(data)
-                .subscribe(new Subscriber<Object>() {
+                .doOnError(new Action1<Throwable>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LogUtil.d(e.getLocalizedMessage());
+                    public void call(Throwable throwable) {
+                        LogUtil.d(throwable.getLocalizedMessage());
                         AppUtil.showToast(context.getString(R.string.fail_to_add_to_favourite));
                         data.setFavoured(false);
                         setFavourite(data, viewHolder);
                     }
-
+                })
+                .onErrorReturn(new Func1<Throwable, Object>() {
                     @Override
-                    public void onNext(Object o) {
-
+                    public Object call(Throwable throwable) {
+                        return null;
                     }
-                });
+                })
+                .subscribe();
     }
 
     protected void removeFromFavourite(final Data data, final NormalViewHolder viewHolder, int position) {
         DBHelper.getInstance()
                 .remove(data)
-                .subscribe(new Subscriber<Object>() {
+                .doOnError(new Action1<Throwable>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LogUtil.d(e.getLocalizedMessage());
+                    public void call(Throwable throwable) {
+                        LogUtil.d(throwable.getLocalizedMessage());
                         AppUtil.showToast(context.getString(R.string.fail_to_remove_from_favourite));
                         data.setFavoured(false);
                         setFavourite(data, viewHolder);
                     }
-
+                })
+                .onErrorReturn(new Func1<Throwable, Object>() {
                     @Override
-                    public void onNext(Object o) {
-
+                    public Object call(Throwable throwable) {
+                        return null;
                     }
-                });
+                })
+                .subscribe();
     }
 
     protected void setFavourite(Data data, NormalViewHolder viewHolder) {
