@@ -65,6 +65,10 @@
   -keep class retrofit2.** { *; }
   -keepattributes Signature
   -keepattributes Exceptions
+
+  -keepclasseswithmembers class * {
+      @retrofit2.http.* <methods>;
+  }
   
   
   #okhttp3
@@ -80,3 +84,5 @@
 
 -dontwarn okio.**
 -dontwarn javax.annotation.**
+
+-keep class nesto.gankio.model.** { *; }

@@ -52,7 +52,8 @@ public class ErrorHandlerHelper {
                 }
             }
         } else {
-            LogUtil.e("error:" + throwable);
+            throwable.printStackTrace();
+            LogUtil.e("error:" + throwable.getLocalizedMessage());
             AppUtil.showToast(throwable.getLocalizedMessage());
         }
     }
