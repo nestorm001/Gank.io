@@ -3,18 +3,24 @@ package nesto.gankio.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Looper;
 import android.support.annotation.IntDef;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -24,6 +30,14 @@ import java.util.regex.Pattern;
 import nesto.gankio.R;
 import nesto.gankio.global.A;
 import nesto.gankio.model.Data;
+import nesto.gankio.model.DataType;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.Exceptions;
+import rx.functions.Action0;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created on 2016/4/8.
@@ -62,7 +76,7 @@ public class AppUtil {
 
     public static String getCurrentTime() {
         Date now = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
         return dateFormat.format(now);
     }
 
@@ -159,10 +173,81 @@ public class AppUtil {
     }
 
     public static void onShareClicked(Data data, Context context) {
+        if (data.getType().equals(DataType.BENEFIT.toString())) {
+            shareImage(data, context);
+        } else {
+            shareUrl(data, context);
+        }
+    }
+
+    private static void shareUrl(Data data, Context context) {
         Intent share = new Intent(Intent.ACTION_SEND)
                 //学习知乎，各种应用不接收title，所有内容全放在text里面
                 .putExtra(Intent.EXTRA_TEXT, data.getDesc() + " " + data.getUrl())
                 .setType("text/html");
         context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
+    }
+
+
+    private static void shareImage(final Data data, final Context context) {
+        Observable.create(new Observable.OnSubscribe<Bitmap>() {
+            @Override
+            public void call(Subscriber<? super Bitmap> subscriber) {
+                try {
+                    Bitmap bitmap = Picasso.with(context).load(data.getUrl()).get();
+                    subscriber.onNext(bitmap);
+                    subscriber.onCompleted();
+                } catch (IOException e) {
+                    subscriber.onError(e);
+                }
+            }
+        })
+                .map(new Func1<Bitmap, Uri>() {
+                    @Override
+                    public Uri call(Bitmap bitmap) {
+                        Uri bmpUri;
+                        try {
+                            File file = new File(context.getCacheDir() + File.separator + "images",
+                                    "/image.jpeg");
+                            //noinspection ResultOfMethodCallIgnored
+                            file.getParentFile().mkdirs();
+                            FileOutputStream out = new FileOutputStream(file);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                            out.close();
+                            bmpUri = FileProvider.getUriForFile(context, "nesto.gankio.fileprovider", file);
+                        } catch (IOException e) {
+                            throw Exceptions.propagate(e);
+                        }
+                        return bmpUri;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        showToast(context.getString(R.string.dealing_with_image));
+                    }
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Uri>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showToast(e.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onNext(Uri uri) {
+                        Intent share = new Intent(Intent.ACTION_SEND)
+                                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                .putExtra(Intent.EXTRA_STREAM, uri)
+                                .setType("image/jpeg");
+                        context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
+                    }
+                });
     }
 }

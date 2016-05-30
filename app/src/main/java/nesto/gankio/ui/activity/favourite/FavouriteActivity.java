@@ -86,6 +86,14 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
     }
 
     private void dealSwipeAndDrag() {
+        final View.OnClickListener cancel = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO
+                AppUtil.showToast("not done yet");
+            }
+        };
+        
         ItemTouchHelper.Callback callBack = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
                 ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
@@ -128,6 +136,7 @@ public class FavouriteActivity extends ActionBarActivity implements FavouriteMvp
                             @Override
                             public void onCompleted() {
                                 adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                                showSnackbar(recyclerView, getString(R.string.need_cancel_hint), getString(R.string.cancel), cancel);
                             }
 
                             @Override

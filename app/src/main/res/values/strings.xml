@@ -25,4 +25,7 @@
     <string name="input_hint">请输入收藏标题</string>
     <string name="delete_failed">delete failed</string>
     <string name="swap_failed">swap failed</string>
+    <string name="dealing_with_image">正在处理图片</string>
+    <string name="need_cancel_hint">是否需要撤销操作？</string>
+    <string name="cancel">撤销</string>
 </resources>
