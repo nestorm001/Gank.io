@@ -186,7 +186,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
         }
     }
 
-    public void showSnackbar(View view, String text, String actionName, View.OnClickListener listener) {
+    public void showSnackbar(View view, String text, String actionName, View.OnClickListener listener, Snackbar.Callback callback) {
         if (snackbar == null) {
             snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG)
                     .setActionTextColor(getResources().getColor(R.color.White));
@@ -198,12 +198,19 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
         if (listener != null) {
             snackbar.setAction(actionName, listener);
         }
+        if (callback != null) {
+            snackbar.setCallback(callback);
+        }
 
         snackbar.show();
     }
 
+    public void showSnackbar(View view, String text, String actionName, View.OnClickListener listener) {
+        showSnackbar(view, text, actionName, listener, null);
+    }
+
     public void showSnackbar(View view, String text) {
-        showSnackbar(view, text, null, null);
+        showSnackbar(view, text, null, null, null);
     }
 
     protected void setVisibilityVisible(View view) {

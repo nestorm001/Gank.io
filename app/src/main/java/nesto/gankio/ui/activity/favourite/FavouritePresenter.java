@@ -15,6 +15,7 @@ import nesto.gankio.model.DataType;
 import nesto.gankio.ui.Presenter;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -98,7 +99,6 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     private void handleImage(Intent intent) {
         Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
-            //TODO should save the image in app ?
             String id = AppUtil.getCurrentTime() + Integer.toHexString(imageUri.toString().hashCode());
             Data data = new Data(id, "", imageUri.toString(), DataType.BENEFIT.toString());
             addToFavourite(data);
@@ -120,6 +120,12 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
                     @Override
                     public Object call(Throwable throwable) {
                         return null;
+                    }
+                })
+                .doOnCompleted(new Action0() {
+                    @Override
+                    public void call() {
+                        view.addItem();
                     }
                 })
                 .subscribe();
