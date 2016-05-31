@@ -87,10 +87,21 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     private void handleText(Intent intent) {
         String title = intent.getStringExtra(Intent.EXTRA_TITLE);
         String content = intent.getStringExtra(Intent.EXTRA_TEXT);
+        LogUtil.d(content);
         if (content.contains("http")) {
             int position = content.indexOf("http");
             title = (title == null || title.isEmpty()) ? content.substring(0, position) : title;
             String url = content.substring(position, content.length());
+            // deal with special urls
+            //eg 分享竹井詩織里的单曲《桜色》: http://163.fm/SHyQROr
+            // (来自@网易云音乐)
+            if (url.contains("\n")) {
+                url = url.substring(0, url.indexOf("\n"));
+            }
+            if (url.contains(" ")) {
+                url = url.substring(0, url.indexOf(" "));
+            }
+            LogUtil.d(url);
             String id = AppUtil.getCurrentTime() + Integer.toHexString(url.hashCode());
             Data data = new Data(id, title, url, C.FROM_SHARE);
             if (title.trim().isEmpty()) {
