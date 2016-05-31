@@ -101,7 +101,6 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
             if (url.contains(" ")) {
                 url = url.substring(0, url.indexOf(" "));
             }
-            LogUtil.d(url);
             String id = AppUtil.getCurrentTime() + Integer.toHexString(url.hashCode());
             Data data = new Data(id, title, url, C.FROM_SHARE);
             if (title.trim().isEmpty()) {
