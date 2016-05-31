@@ -19,7 +19,6 @@ import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.content.ContentActivity;
 import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.LogUtil;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -149,8 +148,6 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 .doOnError(new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        LogUtil.d(throwable.getLocalizedMessage());
-                        AppUtil.showToast(context.getString(R.string.fail_to_add_to_favourite));
                         data.setFavoured(false);
                         setFavourite(data, viewHolder);
                     }
@@ -170,8 +167,6 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 .doOnError(new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        LogUtil.d(throwable.getLocalizedMessage());
-                        AppUtil.showToast(context.getString(R.string.fail_to_remove_from_favourite));
                         data.setFavoured(false);
                         setFavourite(data, viewHolder);
                     }

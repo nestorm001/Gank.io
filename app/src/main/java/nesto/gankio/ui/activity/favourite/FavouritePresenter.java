@@ -101,7 +101,7 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
             if (url.contains(" ")) {
                 url = url.substring(0, url.indexOf(" "));
             }
-            String id = AppUtil.getCurrentTime() + Integer.toHexString(url.hashCode());
+            String id = Integer.toHexString(title.hashCode()) + Integer.toHexString(url.hashCode());
             Data data = new Data(id, title, url, C.FROM_SHARE);
             if (title.trim().isEmpty()) {
                 view.showInputDialog(data);
@@ -151,7 +151,8 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
 
                     @Override
                     public void onNext(Uri uri) {
-                        String id = AppUtil.getCurrentTime() + Integer.toHexString(uri.toString().hashCode());
+                        String id = Integer.toHexString(DataType.BENEFIT.toString().hashCode()) +
+                                Integer.toHexString(uri.toString().hashCode());
                         Data data = new Data(id, "", uri.toString(), DataType.BENEFIT.toString());
                         addToFavourite(data);
                     }
@@ -161,14 +162,6 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     public void addToFavourite(final Data data) {
         DBHelper.getInstance()
                 .add(data)
-                .doOnError(new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        throwable.printStackTrace();
-                        AppUtil.showToast(A.getContext().getString(R.string.fail_to_add_to_favourite));
-                        DBHelper.getInstance().getFavouriteList().remove(0);
-                    }
-                })
                 .onErrorReturn(new Func1<Throwable, Object>() {
                     @Override
                     public Object call(Throwable throwable) {

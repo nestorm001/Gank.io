@@ -9,11 +9,16 @@ import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.ArrayList;
 
+import nesto.gankio.R;
+import nesto.gankio.global.A;
 import nesto.gankio.global.C;
 import nesto.gankio.model.Data;
 import nesto.gankio.network.HttpMethods;
+import nesto.gankio.util.AppUtil;
+import nesto.gankio.util.LogUtil;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -44,20 +49,37 @@ public class DBHelper {
         return Observable.create(new Observable.OnSubscribe<Object>() {
             @Override
             public void call(Subscriber<? super Object> subscriber) {
-                favouriteList.add(0, data);
-                BriteDatabase.Transaction transaction = db.newTransaction();
-                try {
-                    db.insert(C.FAVOURITE_TABLE, makeData(favouriteList.size() - 1, data));
+                if (favouriteList.contains(data)) {
+                    LogUtil.d("data already exists");
+                    subscriber.onError(new DBException(A.getContext().getString(R.string.already_exists)));
+                } else {
+                    favouriteList.add(0, data);
+                    BriteDatabase.Transaction transaction = db.newTransaction();
+                    try {
+                        db.insert(C.FAVOURITE_TABLE, makeData(favouriteList.size() - 1, data));
 //                    throw new RuntimeException("hehe");
-                    transaction.markSuccessful();
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                } finally {
-                    transaction.end();
-                    subscriber.onCompleted();
+                        transaction.markSuccessful();
+                    } catch (Exception e) {
+                        subscriber.onError(e);
+                    } finally {
+                        transaction.end();
+                        subscriber.onCompleted();
+                    }
                 }
             }
-        }).compose(HttpMethods.getInstance().setThreads());
+        }).compose(HttpMethods.getInstance().setThreads())
+                .doOnError(new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                        if (throwable instanceof DBException) {
+                            AppUtil.showToast(throwable.getLocalizedMessage());
+                        } else {
+                            favouriteList.remove(0);
+                            AppUtil.showToast(A.getContext().getString(R.string.fail_to_add_to_favourite));
+                        }
+                    }
+                });
     }
 
     public Observable<Object> remove(final Data data) {
@@ -85,7 +107,14 @@ public class DBHelper {
                     subscriber.onCompleted();
                 }
             }
-        }).compose(HttpMethods.getInstance().setThreads());
+        }).compose(HttpMethods.getInstance().setThreads())
+                .doOnError(new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                        AppUtil.showToast(A.getContext().getString(R.string.fail_to_remove_from_favourite));
+                    }
+                });
     }
 
     public Observable<Object> move(final int from, final int to) {

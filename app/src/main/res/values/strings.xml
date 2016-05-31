@@ -10,22 +10,22 @@
     <string name="cannot_connect_to_server">无法连接到服务器</string>
     <!--dialog-->
     <string name="load_data_ing">数据加载中……</string>
-    
+
     <!--menu-->
     <string name="favourite">收藏列表</string>
     <string name="fun">你猜有啥用</string>
     <string name="fun_hint">多点几下，会跳的哦！</string>
 
-
+    <!--favourite-->
     <string name="send_to">发送到</string>
     <string name="fail_to_add_to_favourite">收藏失败</string>
     <string name="fail_to_remove_from_favourite">取消收藏失败</string>
     <string name="favourite_list">收藏夹</string>
     <string name="not_supported">Not supported</string>
     <string name="input_hint">请输入收藏标题</string>
-    <string name="delete_failed">delete failed</string>
-    <string name="swap_failed">swap failed</string>
+    <string name="swap_failed">交换顺序失败</string>
     <string name="dealing_with_image">正在处理图片</string>
     <string name="need_cancel_hint">是否需要撤销操作？</string>
     <string name="cancel">撤销</string>
+    <string name="already_exists">收藏已存在</string>
 </resources>

@@ -136,7 +136,6 @@ public class FavouriteActivity extends ActionBarActivity
 
                             @Override
                             public void onError(Throwable e) {
-                                AppUtil.showToast(getString(R.string.delete_failed));
                                 adapter.getList().add(position, data);
                                 adapter.notifyItemInserted(position);
                             }
@@ -155,8 +154,8 @@ public class FavouriteActivity extends ActionBarActivity
     @Override
     public void addItem() {
         adapter.notifyItemInserted(0);
+        adapter.notifyItemRangeChanged(1, adapter.getItemCount());
         recyclerView.smoothScrollToPosition(0);
-//        adapter.notifyItemRangeChanged(1, adapter.getItemCount());
     }
 
     @Override

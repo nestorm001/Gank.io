@@ -1,14 +1,10 @@
 package nesto.gankio.ui.activity.content;
 
-import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
-import nesto.gankio.global.A;
 import nesto.gankio.model.Data;
 import nesto.gankio.network.ErrorHandlerHelper;
 import nesto.gankio.network.HttpMethods;
 import nesto.gankio.ui.Presenter;
-import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.LogUtil;
 import rx.Subscriber;
 import rx.functions.Action1;
 
@@ -52,8 +48,6 @@ public class ContentPresenter implements Presenter<ContentMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtil.d(e.getLocalizedMessage());
-                        AppUtil.showToast(A.getContext().getString(R.string.fail_to_add_to_favourite));
                         data.setFavoured(false);
                         view.setFavourite(data);
                     }
@@ -76,8 +70,6 @@ public class ContentPresenter implements Presenter<ContentMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtil.d(e.getLocalizedMessage());
-                        AppUtil.showToast(A.getContext().getString(R.string.fail_to_remove_from_favourite));
                         data.setFavoured(false);
                         view.setFavourite(data);
                     }
