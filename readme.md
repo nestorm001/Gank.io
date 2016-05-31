@@ -19,4 +19,5 @@
 * 一堆想到还没想到的脑洞
 
 # Release
-* [v0.1.0-beta ](https://github.com/nestorm001/Gank.io/blob/master/release/nesto.gankio_release_v0.1.0-beta_2016-05-30_nesto.apk)
+* ~~[v0.1.0-beta ](https://github.com/nestorm001/Gank.io/blob/master/release/nesto.gankio_release_v0.1.0-beta_2016-05-30_nesto.apk)~~
+* [v0.1.1-beta ](https://github.com/nestorm001/Gank.io/blob/master/release/nesto.gankio_release_v0.1.1-beta_2016-05-31_nesto.apk)
