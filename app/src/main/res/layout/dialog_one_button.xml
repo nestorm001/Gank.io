@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:drawable/dialog_holo_light_frame">
@@ -22,12 +23,12 @@
             android:paddingBottom="3dp">
 
             <ImageView
-                android:id="@+id/imageView1"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:scaleType="fitEnd" />
+                android:scaleType="fitEnd"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/tv_dialog"
@@ -42,7 +43,6 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/ll_dialog_button"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="137dp"
@@ -50,9 +50,8 @@
 
             <Button
                 android:id="@+id/dialog_button_confirm"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="43dp"
-                android:layout_alignParentLeft="true"
                 android:layout_weight="1"
                 android:background="@drawable/dialog_normal_btn_bg"
                 android:textSize="18dp" />
