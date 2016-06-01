@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,9 +18,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
+import nesto.gankio.global.C;
+import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.ActionBarActivity;
+import nesto.gankio.ui.activity.content.ContentActivity;
 import nesto.gankio.ui.activity.favourite.FavouriteActivity;
 import nesto.gankio.ui.activity.image_view.ImageViewActivity;
 import nesto.gankio.ui.fragment.normal.NormalFragment;
@@ -46,9 +51,27 @@ public class MainActivity extends ActionBarActivity {
         showAnimation();
     }
 
+    private void setTitleLink() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent(context, ContentActivity.class)
+                            .putExtra(Intents.TRANS_DATA, C.TITLE_DATA);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+        } else {
+            LogUtil.d("title not found");
+        }
+    }
+
     @Override
     public void setContentView() {
         setContentView(R.layout.activity_main);
+        setTitleLink();
     }
 
     private void loadFavourite() {

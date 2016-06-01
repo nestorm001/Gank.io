@@ -45,7 +45,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
 
     private Snackbar snackbar;
 
-    private Context context;
+    protected Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

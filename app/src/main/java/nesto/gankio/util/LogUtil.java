@@ -28,7 +28,7 @@ public class LogUtil {
 
     private static void e(String tag, String logInfo) {
         if (BuildConfig.DEBUG && tag != null && logInfo != null) {
-            Log.d(tag, getTraceInfo());
+            Log.e(tag, getTraceInfo());
             Log.e(tag, logInfo);
         }
     }
