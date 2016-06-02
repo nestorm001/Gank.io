@@ -163,7 +163,7 @@ public class DBHelper {
                         } while (cursor.moveToNext());
                         return favouriteList;
                     }
-                });
+                }).first();
     }
 
     private ContentValues makeData(int order, Data data) {
