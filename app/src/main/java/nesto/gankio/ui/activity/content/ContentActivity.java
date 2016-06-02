@@ -33,6 +33,7 @@ import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.util.AppUtil;
+import nesto.gankio.util.LogUtil;
 
 /**
  * Created on 2016/5/11.
@@ -193,7 +194,12 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()) {
+            String oldUrl = webView.getUrl();
             webView.goBack();
+            if (webView.getUrl().equals(oldUrl)) {
+                LogUtil.d("stupid same url");
+                finish();
+            }
         } else {
             finish();
         }
@@ -223,10 +229,10 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        
+
         MenuItem share = menu.findItem(R.id.share);
         share.setVisible(true);
-        
+
         favourite = menu.findItem(R.id.favourite);
         setFavourite(data);
         return super.onCreateOptionsMenu(menu);
