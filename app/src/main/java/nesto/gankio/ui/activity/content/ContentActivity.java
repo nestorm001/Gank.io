@@ -97,10 +97,8 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
                 currentUrl = url;
-                scrollView.scrollTo(0, 0);
-                return true;
+                return false;
             }
         });
         WebSettings settings = webView.getSettings();
@@ -118,6 +116,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
                 if (progressBar.getProgress() == 100) {
                     progressBar.setVisibility(View.GONE);
                     progressAnimator.removeAllListeners();
+                    scrollView.smoothScrollTo(0, 0);
                 }
             }
         });
@@ -194,12 +193,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()) {
-            String oldUrl = webView.getUrl();
             webView.goBack();
-            if (webView.getUrl().equals(oldUrl)) {
-                LogUtil.d("stupid same url");
-                finish();
-            }
         } else {
             finish();
         }

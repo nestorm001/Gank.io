@@ -61,8 +61,6 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     }
 
     public void loadFavourite(final Intent intent) {
-        LogUtil.d("loadFavourite");
-        LogUtil.d("isLoad " + isLoad);
         if (isLoad) {
             dealWithIntent(intent);
         } else {

@@ -23,6 +23,7 @@ import nesto.gankio.global.C;
 import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
 import nesto.gankio.model.Results;
+import nesto.gankio.network.ErrorHandler;
 import nesto.gankio.network.ErrorHandlerHelper;
 import nesto.gankio.network.HttpMethods;
 import rx.Subscription;
@@ -153,13 +154,22 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     adapter.clearData();
                 }
                 adapter.add(results.getResults());
-                swipeRefreshLayout.setRefreshing(false);
-                isLoading = false;
-                isNoData = false;
+                setRefreshFinished();
             }
         };
-        Action1<Throwable> onError = new ErrorHandlerHelper().createOnError(null);
+        Action1<Throwable> onError = new ErrorHandlerHelper().createOnError(new ErrorHandler() {
+            @Override
+            public void doAfterHandle() {
+                setRefreshFinished();
+            }
+        });
         subscription = HttpMethods.getInstance().getData(onNext, onError, type.toString(), C.LOAD_NUM, ++pageNum);
+    }
+    
+    private void setRefreshFinished() {
+        swipeRefreshLayout.setRefreshing(false);
+        isLoading = false;
+        isNoData = false;
     }
 
     private void setListener() {

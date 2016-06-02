@@ -29,6 +29,7 @@ import nesto.gankio.ui.activity.image_view.ImageViewActivity;
 import nesto.gankio.ui.fragment.normal.NormalFragment;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
+import rx.Subscription;
 import rx.functions.Action1;
 
 
@@ -39,6 +40,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Bind(R.id.tabs)
     TabLayout tabLayout;
+
+    private Subscription subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,19 +78,21 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void loadFavourite() {
-        DBHelper.getInstance()
+        subscription = DBHelper.getInstance()
                 .getAll()
                 .subscribe(new Action1<ArrayList<Data>>() {
                     @Override
                     public void call(ArrayList<Data> datas) {
                         LogUtil.d("收藏夹加载完成");
+                        subscription.unsubscribe();
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtil.e(throwable.getLocalizedMessage());
+                        subscription.unsubscribe();
                     }
-                }).unsubscribe();
+                });
     }
 
     @Override
