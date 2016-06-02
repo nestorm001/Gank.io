@@ -30,6 +30,7 @@ import nesto.gankio.ui.fragment.normal.NormalFragment;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
 import rx.Subscription;
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 
@@ -84,12 +85,16 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void call(ArrayList<Data> datas) {
                         LogUtil.d("收藏夹加载完成");
-                        subscription.unsubscribe();
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtil.e(throwable.getLocalizedMessage());
+                        subscription.unsubscribe();
+                    }
+                }, new Action0() {
+                    @Override
+                    public void call() {
                         subscription.unsubscribe();
                     }
                 });

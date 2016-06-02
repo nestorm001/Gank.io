@@ -33,7 +33,6 @@ import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.LogUtil;
 
 /**
  * Created on 2016/5/11.
@@ -97,6 +96,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                scrollView.smoothScrollTo(0, 0);
                 currentUrl = url;
                 return false;
             }
@@ -116,7 +116,6 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
                 if (progressBar.getProgress() == 100) {
                     progressBar.setVisibility(View.GONE);
                     progressAnimator.removeAllListeners();
-                    scrollView.smoothScrollTo(0, 0);
                 }
             }
         });
