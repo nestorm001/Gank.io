@@ -101,8 +101,7 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
             title = (title == null || title.isEmpty()) ? content.substring(0, position) : title;
             String prefix = "分享";
             if (title.startsWith(prefix)) {
-                //noinspection ResultOfMethodCallIgnored
-                title.replace(prefix, "");
+                title = title.replace(prefix, "");
             }
             String url = content.substring(position, content.length());
             // deal with special urls
