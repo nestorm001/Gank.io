@@ -38,6 +38,7 @@ public class HttpResultFunc<T> implements Func1<Result<T>, T> {
                 Error error = new Gson().fromJson(response.errorBody().string(), Error.class);
                 errorMessage = error.toString();
             } catch (IOException e) {
+                e.printStackTrace();
                 errorMessage = context.getString(R.string.unknown_error);
             }
             throw new HttpException(response.code(), errorMessage);
@@ -58,6 +59,7 @@ public class HttpResultFunc<T> implements Func1<Result<T>, T> {
         } else if (error instanceof SocketTimeoutException) {
             throw new InternetException(context.getString(R.string.time_out));
         } else {
+            error.printStackTrace();
             throw new InternetException(error.getLocalizedMessage());
         }
     }
