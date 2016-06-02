@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.model.Data;
 import nesto.gankio.ui.activity.ActionBarActivity;
+import nesto.gankio.ui.activity.main.MainActivity;
 import nesto.gankio.util.AppUtil;
 import rx.Subscriber;
 
@@ -186,7 +188,19 @@ public class FavouriteActivity extends ActionBarActivity
     public void onDelete(Data data) {
         showSnackbar(data);
     }
-    
+
+    @Override
+    public void backToMain() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(getContext(), MainActivity.class));
+                finish();
+            }
+        }, 1000);
+
+    }
+
     private void showSnackbar(final Data data) {
         showSnackbar(recyclerView, getString(R.string.need_cancel_hint), getString(R.string.cancel), new View.OnClickListener() {
             @Override

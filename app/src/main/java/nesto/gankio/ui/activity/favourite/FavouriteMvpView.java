@@ -11,4 +11,6 @@ public interface FavouriteMvpView extends MvpView {
     void addItem();
 
     void showInputDialog(Data data);
+
+    void backToMain();
 }

@@ -47,6 +47,40 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
         view = null;
     }
 
+    public void loadFavourite(final Intent intent) {
+        if (isLoad) {
+            dealWithIntent(intent);
+        } else {
+            subscription = DBHelper.getInstance()
+                    .getAll()
+                    .subscribe(new Action1<ArrayList<Data>>() {
+                        @Override
+                        public void call(ArrayList<Data> datas) {
+                            LogUtil.d("收藏夹加载完成");
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            LogUtil.e(throwable.getLocalizedMessage());
+                            if (throwable instanceof DBException && throwable.getMessage().equals("no result")) {
+                                finishSubscribe(intent);
+                            }
+                        }
+                    }, new Action0() {
+                        @Override
+                        public void call() {
+                            finishSubscribe(intent);
+                        }
+                    });
+        }
+    }
+
+    private void finishSubscribe(Intent intent) {
+        dealWithIntent(intent);
+        isLoad = true;
+        subscription.unsubscribe();
+    }
+
     public void dealWithIntent(Intent intent) {
         LogUtil.d(intent.toString());
         String action = intent.getAction();
@@ -58,36 +92,6 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
                 handleImage(intent); // 处理发送来的图片
             }
         }
-    }
-
-    public void loadFavourite(final Intent intent) {
-        if (isLoad) {
-            dealWithIntent(intent);
-        } else {
-            subscription = DBHelper.getInstance()
-                    .getAll()
-                    .subscribe(new Action1<ArrayList<Data>>() {
-                        @Override
-                        public void call(ArrayList<Data> datas) {
-                            LogUtil.d("收藏夹加载完成");
-                            finishSubscribe(intent);
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            LogUtil.e(throwable.getLocalizedMessage());
-                            if (throwable instanceof DBException && throwable.getMessage().equals("no result")) {
-                                finishSubscribe(intent);
-                            }
-                        }
-                    });
-        }
-    }
-
-    private void finishSubscribe(Intent intent) {
-        dealWithIntent(intent);
-        isLoad = true;
-        subscription.unsubscribe();
     }
 
     private void handleText(Intent intent) {
@@ -172,18 +176,23 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     public void addToFavourite(final Data data) {
         DBHelper.getInstance()
                 .add(data)
-                .onErrorReturn(new Func1<Throwable, Object>() {
+                .subscribe(new Subscriber<Object>() {
                     @Override
-                    public Object call(Throwable throwable) {
-                        return null;
-                    }
-                })
-                .doOnCompleted(new Action0() {
-                    @Override
-                    public void call() {
+                    public void onCompleted() {
                         view.addItem();
                     }
-                })
-                .subscribe();
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (e instanceof DBException) {
+                            view.backToMain();
+                        }
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+                });
     }
 }
