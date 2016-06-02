@@ -19,6 +19,7 @@ import nesto.gankio.ui.Presenter;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
 import rx.functions.Action0;
@@ -34,6 +35,7 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
 
     private FavouriteMvpView view;
     private boolean isLoad = false;
+    private Subscription subscription;
 
     @Override
     public void attachView(FavouriteMvpView view) {
@@ -59,29 +61,35 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
     }
 
     public void loadFavourite(final Intent intent) {
+        LogUtil.d("loadFavourite");
+        LogUtil.d("isLoad " + isLoad);
         if (isLoad) {
             dealWithIntent(intent);
         } else {
-            DBHelper.getInstance()
+            subscription = DBHelper.getInstance()
                     .getAll()
                     .subscribe(new Action1<ArrayList<Data>>() {
                         @Override
                         public void call(ArrayList<Data> datas) {
                             LogUtil.d("收藏夹加载完成");
-                            dealWithIntent(intent);
-                            isLoad = true;
+                            finishSubscribe(intent);
                         }
                     }, new Action1<Throwable>() {
                         @Override
                         public void call(Throwable throwable) {
                             LogUtil.e(throwable.getLocalizedMessage());
                             if (throwable instanceof DBException && throwable.getMessage().equals("no result")) {
-                                dealWithIntent(intent);
-                                isLoad = true;
+                                finishSubscribe(intent);
                             }
                         }
-                    }).unsubscribe();
+                    });
         }
+    }
+
+    private void finishSubscribe(Intent intent) {
+        dealWithIntent(intent);
+        isLoad = true;
+        subscription.unsubscribe();
     }
 
     private void handleText(Intent intent) {
@@ -91,6 +99,11 @@ public class FavouritePresenter implements Presenter<FavouriteMvpView> {
         if (content.contains("http")) {
             int position = content.indexOf("http");
             title = (title == null || title.isEmpty()) ? content.substring(0, position) : title;
+            String prefix = "分享";
+            if (title.startsWith(prefix)) {
+                //noinspection ResultOfMethodCallIgnored
+                title.replace(prefix, "");
+            }
             String url = content.substring(position, content.length());
             // deal with special urls
             //eg 分享竹井詩織里的单曲《桜色》: http://163.fm/SHyQROr

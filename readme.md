@@ -11,13 +11,15 @@
 * jp.wasabeef:recyclerview-animators:2.2.3
 
 # Issues To Fix #
-* 收藏偶尔会失败
-* ~~收藏出错数组越界(似乎解决了，呵)~~
+* ~~收藏偶尔会失败（似乎是因为unsubscribe调用太早）~~
+* ~~某些url可以一直返回（用一个丑陋的办法处理了）~~
+* ~~收藏出错数组越界（似乎解决了，呵）~~
 
 # TODO #
 * video player
 * 一堆想到还没想到的脑洞
 
 # Release
-* ~~[v0.1.0-beta ](https://github.com/nestorm001/Gank.io/blob/master/release/nesto.gankio_release_v0.1.0-beta_2016-05-30_nesto.apk)~~
-* [v0.1.1-beta ](https://github.com/nestorm001/Gank.io/blob/master/release/nesto.gankio_release_v0.1.1-beta_2016-05-31_nesto.apk)
+* ~~[v0.1.0-beta ]()~~
+* [v0.1.1-beta ](https://github.com/nestorm001/Gank.io/releases/download/v0.1.1-beta/nesto.gankio_release_v0.1.1-beta_2016-05-31_nesto.apk)
+* [v0.1.2-beta ](https://github.com/nestorm001/Gank.io/releases/download/v0.1.2-beta/nesto.gankio_release_v0.1.2-beta_2016-06-02_nesto.apk)
