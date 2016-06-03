@@ -31,21 +31,10 @@ import rx.schedulers.Schedulers;
  * Created on 2016/5/14.
  * By nesto
  */
-public class FavouritePresenter implements Presenter<FavouriteMvpView> {
+public class FavouritePresenter extends Presenter<FavouriteMvpView> {
 
-    private FavouriteMvpView view;
     private boolean isLoad = false;
     private Subscription subscription;
-
-    @Override
-    public void attachView(FavouriteMvpView view) {
-        this.view = view;
-    }
-
-    @Override
-    public void detachView() {
-        view = null;
-    }
 
     public void loadFavourite(final Intent intent) {
         if (isLoad) {

@@ -4,11 +4,16 @@ package nesto.gankio.ui;
  * Created on 2016/4/11.
  * By nesto
  */
-public interface Presenter<V> {
+public abstract class Presenter<V> {
 
-    void attachView(V view);
+    protected V view;
 
-    void detachView();
+    public void attachView(V view) {
+        this.view = view;
+    }
 
+    public void detachView() {
+        view = null;
+    }
 }
 

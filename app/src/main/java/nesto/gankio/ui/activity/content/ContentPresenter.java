@@ -12,19 +12,7 @@ import rx.functions.Action1;
  * Created on 2016/5/11.
  * By nesto
  */
-public class ContentPresenter implements Presenter<ContentMvpView> {
-
-    private ContentMvpView view;
-
-    @Override
-    public void attachView(ContentMvpView view) {
-        this.view = view;
-    }
-
-    @Override
-    public void detachView() {
-        view = null;
-    }
+public class ContentPresenter extends Presenter<ContentMvpView> {
 
     public void getRandomPicture() {
         Action1<String> onNext = new Action1<String>() {

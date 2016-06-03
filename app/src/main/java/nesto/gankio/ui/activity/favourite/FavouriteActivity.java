@@ -195,7 +195,7 @@ public class FavouriteActivity extends ActionBarActivity
             @Override
             public void run() {
                 startActivity(new Intent(getContext(), MainActivity.class));
-                finish();
+                onBackPressed();
             }
         }, 1000);
 

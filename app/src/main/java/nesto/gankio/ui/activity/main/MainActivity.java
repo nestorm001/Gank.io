@@ -174,4 +174,9 @@ public class MainActivity extends ActionBarActivity {
             return false;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }

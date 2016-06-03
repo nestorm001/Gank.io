@@ -14,22 +14,17 @@ import rx.functions.Action1;
  * Created on 2016/5/17.
  * By nesto
  */
-public class ImageViewPresenter implements Presenter<ImageViewMvpView> {
+public class ImageViewPresenter extends Presenter<ImageViewMvpView> {
 
-    private ImageViewMvpView view;
     private ArrayList<String> urls;
     private Random random;
 
+    
     @Override
     public void attachView(ImageViewMvpView view) {
         urls = new ArrayList<>();
         random = new Random();
         this.view = view;
-    }
-
-    @Override
-    public void detachView() {
-        this.view = null;
     }
 
     public void getRandomPicture() {

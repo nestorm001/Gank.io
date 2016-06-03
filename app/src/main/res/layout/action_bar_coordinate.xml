@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    android:minHeight="@dimen/app_bar_height"
+    android:minHeight="?attr/actionBarSize"
     android:theme="@style/AppTheme.AppBarOverlay">
 
     <android.support.design.widget.CollapsingToolbarLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="@dimen/app_bar_height"
+        android:minHeight="?attr/actionBarSize"
         app:contentScrim="?attr/colorPrimary"
         app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
