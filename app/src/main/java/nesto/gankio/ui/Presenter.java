@@ -7,13 +7,16 @@ package nesto.gankio.ui;
 public abstract class Presenter<V> {
 
     protected V view;
+    protected boolean isViewStillAlive;
 
     public void attachView(V view) {
         this.view = view;
+        isViewStillAlive = true;
     }
 
     public void detachView() {
         view = null;
+        isViewStillAlive = false;
     }
 }
 

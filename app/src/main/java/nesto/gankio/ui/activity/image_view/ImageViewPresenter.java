@@ -22,9 +22,9 @@ public class ImageViewPresenter extends Presenter<ImageViewMvpView> {
     
     @Override
     public void attachView(ImageViewMvpView view) {
+        super.attachView(view);
         urls = new ArrayList<>();
         random = new Random();
-        this.view = view;
     }
 
     public void getRandomPicture() {
@@ -49,7 +49,7 @@ public class ImageViewPresenter extends Presenter<ImageViewMvpView> {
         int position = random.nextInt(urls.size());
         String url = urls.get(position);
         urls.remove(position);
-        if (view != null) {
+        if (isViewStillAlive) {
             view.show(url);
         }
     }

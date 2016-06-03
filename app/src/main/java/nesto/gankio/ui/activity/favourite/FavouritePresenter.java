@@ -107,7 +107,9 @@ public class FavouritePresenter extends Presenter<FavouriteMvpView> {
             String id = Integer.toHexString(title.hashCode()) + Integer.toHexString(url.hashCode());
             Data data = new Data(id, title, url, C.FROM_SHARE);
             if (title.trim().isEmpty()) {
-                view.showInputDialog(data);
+                if (isViewStillAlive) {
+                    view.showInputDialog(data);
+                }
             } else {
                 addToFavourite(data);
             }
@@ -168,13 +170,17 @@ public class FavouritePresenter extends Presenter<FavouriteMvpView> {
                 .subscribe(new Subscriber<Object>() {
                     @Override
                     public void onCompleted() {
-                        view.addItem();
+                        if (isViewStillAlive) {
+                            view.addItem();
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         if (e instanceof DBException) {
-                            view.backToMain();
+                            if (isViewStillAlive) {
+                                view.backToMain();
+                            }
                         }
                     }
 

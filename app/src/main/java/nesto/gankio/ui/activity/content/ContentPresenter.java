@@ -18,7 +18,9 @@ public class ContentPresenter extends Presenter<ContentMvpView> {
         Action1<String> onNext = new Action1<String>() {
             @Override
             public void call(String s) {
-                view.show(s);
+                if (isViewStillAlive) {
+                    view.show(s);
+                }
             }
         };
         Action1<Throwable> onError = new ErrorHandlerHelper().createOnError(null);
@@ -37,7 +39,9 @@ public class ContentPresenter extends Presenter<ContentMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         data.setFavoured(false);
-                        view.setFavourite(data);
+                        if (isViewStillAlive) {
+                            view.setFavourite(data);
+                        }
                     }
 
                     @Override
@@ -58,8 +62,10 @@ public class ContentPresenter extends Presenter<ContentMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        data.setFavoured(false);
-                        view.setFavourite(data);
+                        data.setFavoured(true);
+                        if (isViewStillAlive) {
+                            view.setFavourite(data);
+                        }
                     }
 
                     @Override
