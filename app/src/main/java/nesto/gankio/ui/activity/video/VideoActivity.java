@@ -2,13 +2,13 @@ package nesto.gankio.ui.activity.video;
 
 import android.os.Bundle;
 
-import nesto.gankio.ui.activity.ActionBarActivity;
+import nesto.gankio.ui.activity.SwipeBackActivity;
 
 /**
  * Created on 2016/5/11.
  * By nesto
  */
-public class VideoActivity extends ActionBarActivity implements VideoMvpView {
+public class VideoActivity extends SwipeBackActivity implements VideoMvpView {
 
     private VideoPresenter presenter;
 

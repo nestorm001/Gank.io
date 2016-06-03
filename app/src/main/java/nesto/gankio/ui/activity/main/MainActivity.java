@@ -1,5 +1,6 @@
 package nesto.gankio.ui.activity.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -63,7 +64,7 @@ public class MainActivity extends ActionBarActivity {
                 public boolean onLongClick(View v) {
                     Intent intent = new Intent(context, ContentActivity.class)
                             .putExtra(Intents.TRANS_DATA, C.TITLE_DATA);
-                    startActivity(intent);
+                    AppUtil.startSwipeActivity((Activity) context, intent);
                     return true;
                 }
             });

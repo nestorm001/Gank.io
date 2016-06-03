@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -11,6 +12,7 @@ import android.os.Looper;
 import android.support.annotation.IntDef;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -96,16 +98,16 @@ public class AppUtil {
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
-    public static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+    public static int dip2px(float dpValue) {
+        final float scale = A.getContext().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
     /**
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
      */
-    public static int px2dip(Context context, float pxValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+    public static int px2dip(float pxValue) {
+        final float scale = A.getContext().getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
@@ -258,5 +260,48 @@ public class AppUtil {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
         out.close();
         return file;
+    }
+
+    public static void screenshots(Activity activity, boolean isFullScreen) {
+        try {
+            //View是你需要截图的View
+            View decorView = activity.getWindow().getDecorView();
+            decorView.setDrawingCacheEnabled(true);
+            decorView.buildDrawingCache();
+            Bitmap b1 = decorView.getDrawingCache();
+            // 获取状态栏高度 /
+            Rect frame = new Rect();
+            activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+            int statusBarHeight = frame.top;
+            // 获取屏幕长和高 Get screen width and height
+            int width = activity.getWindowManager().getDefaultDisplay().getWidth();
+            int height = activity.getWindowManager().getDefaultDisplay().getHeight();
+            // 去掉标题栏 Remove the statusBar Height
+            Bitmap bitmap;
+            if (isFullScreen) {
+                bitmap = Bitmap.createBitmap(b1, 0, 0, width, height);
+            } else {
+                bitmap = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
+            }
+            decorView.destroyDrawingCache();
+            FileOutputStream out = new FileOutputStream(getScreenshotFile());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static File getScreenshotFile() {
+        final String windowBitmap = "screenshots.jpg";
+        return new File(A.getContext().getCacheDir(), windowBitmap);
+    }
+
+    public static void startSwipeActivity(Activity activity, Intent intent) {
+        startSwipeActivity(activity, intent, false);
+    }
+
+    public static void startSwipeActivity(Activity activity, Intent intent, boolean isFullScreen) {
+        screenshots(activity, isFullScreen);
+        activity.startActivity(intent);
     }
 }
