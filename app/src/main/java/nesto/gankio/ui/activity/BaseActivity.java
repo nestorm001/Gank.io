@@ -3,7 +3,6 @@ package nesto.gankio.ui.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
-import android.widget.TextView;
 
 import nesto.gankio.R;
 import nesto.gankio.global.A;
@@ -33,13 +30,10 @@ import nesto.gankio.util.LogUtil;
 /**
  * Created on 2015/10/15 14:38
  */
+@SuppressWarnings("unused")
 public class BaseActivity extends AppCompatActivity implements MvpView {
 
     public static final int ANIMATION_DURATION = 500;
-
-    private Dialog oneButtonDialog;
-    private TextView oneButtonDialogInfo;
-    private Button oneButtonDialogButton;
 
     private ProgressDialog progressDialog;
 
@@ -118,53 +112,9 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
         this.overridePendingTransition(R.anim.anim_exit_fade_in, R.anim.anim_exit_fade_out);
     }
 
-    private void initOneButtonDialog(String showTxt, String btn) {
-        // 定义Dialog对象，/res/values/下的styles.xml文件十分重要R.style.CustomDialog
-        oneButtonDialog = new Dialog(context, R.style.one_button_dialog);
-        oneButtonDialog.setContentView(R.layout.dialog_one_button);// 为对话框设置自定义布局
-        oneButtonDialogButton = (Button) oneButtonDialog.findViewById(R.id.dialog_button_confirm);
-        oneButtonDialogButton.setText(btn);
-        oneButtonDialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                oneButtonDialog.dismiss();
-            }
-        });
-        oneButtonDialogInfo = (TextView) oneButtonDialog.findViewById(R.id.tv_dialog);
-        oneButtonDialogInfo.setText(showTxt);
-    }
-
-    public void setOneButtonOnClickListener(View.OnClickListener listener) {
-
-    }
-
-    public void showOneButtonDialog(String showTxt, String btn) {
-        showOneButtonDialog(showTxt, btn, null);
-    }
-
-    public void showOneButtonDialog(String showTxt, String btn, View.OnClickListener listener) {
-        if (oneButtonDialog == null) {
-            initOneButtonDialog(showTxt, btn);
-        } else {
-            oneButtonDialogButton.setText(btn);
-            oneButtonDialogInfo.setText(showTxt);
-        }
-        if (listener != null) {
-            oneButtonDialogButton.setOnClickListener(listener);
-        }
-        oneButtonDialog.show();
-    }
-
-    public void dismissOneButtonDialog() {
-        if (oneButtonDialog != null && oneButtonDialog.isShowing()) {
-            oneButtonDialog.dismiss();
-        }
-    }
-
     public void showProcessDialog(String title) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
-            //七牛的进度有问题，还是转圈圈靠谱
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setCancelable(false);
             progressDialog.setProgress(0);

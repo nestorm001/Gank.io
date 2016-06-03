@@ -24,12 +24,4 @@
         <item name="android:shadowRadius">8</item>
         <item name="android:shadowColor">@android:color/black</item>
     </style>
-
-    <style name="one_button_dialog" parent="android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/Transparent</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
 </resources>
