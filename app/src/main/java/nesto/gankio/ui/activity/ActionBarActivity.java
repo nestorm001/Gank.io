@@ -25,7 +25,7 @@ public abstract class ActionBarActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView();
         initActionBar();
-        setTranslucentStatusBar(R.color.colorPrimary);
+        setTranslucentStatusBar(R.color.colorPrimaryDark);
     }
 
     public abstract void setContentView();

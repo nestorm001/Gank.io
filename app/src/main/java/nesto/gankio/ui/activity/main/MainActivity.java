@@ -152,7 +152,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.favourite:
-                startActivity(new Intent(this, FavouriteActivity.class));
+                AppUtil.startSwipeActivity(this, new Intent(this, FavouriteActivity.class));
                 break;
             case R.id.view_image:
                 if (isSucceed()) {
