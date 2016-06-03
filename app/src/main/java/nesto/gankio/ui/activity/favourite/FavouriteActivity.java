@@ -45,6 +45,7 @@ public class FavouriteActivity extends SwipeBackActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTranslucentStatusBar(R.color.Transparent);
         ButterKnife.bind(this);
         init();
         initView();
@@ -92,7 +93,7 @@ public class FavouriteActivity extends SwipeBackActivity
 
     private void dealSwipeAndDrag() {
         ItemTouchHelper.Callback callBack = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
-                ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+                ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 final int fromPosition = viewHolder.getAdapterPosition();//得到拖动ViewHolder的position
@@ -198,7 +199,6 @@ public class FavouriteActivity extends SwipeBackActivity
                 onBackPressed();
             }
         }, 1000);
-
     }
 
     private void showSnackbar(final Data data) {

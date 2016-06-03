@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Looper;
 import android.support.annotation.IntDef;
@@ -263,16 +264,13 @@ public class AppUtil {
     }
 
     public static void screenshots(Activity activity, boolean isFullScreen) {
+        //TODO not good enough
         try {
             //View是你需要截图的View
             View decorView = activity.getWindow().getDecorView();
             decorView.setDrawingCacheEnabled(true);
 //            decorView.buildDrawingCache();
             Bitmap window = decorView.getDrawingCache();
-            // 获取状态栏高度 /
-            Rect frame = new Rect();
-            activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-            int statusBarHeight = frame.top;
             // 获取屏幕长和高 Get screen width and height
             int width = activity.getWindowManager().getDefaultDisplay().getWidth();
             int height = activity.getWindowManager().getDefaultDisplay().getHeight();
@@ -281,6 +279,10 @@ public class AppUtil {
             if (isFullScreen) {
                 bitmap = Bitmap.createBitmap(window, 0, 0, width, height);
             } else {
+                // 获取状态栏高度 /
+                Rect frame = new Rect();
+                activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+                int statusBarHeight = frame.top;
                 bitmap = Bitmap.createBitmap(window, 0, statusBarHeight, width, height - statusBarHeight);
             }
             decorView.destroyDrawingCache();
@@ -297,10 +299,11 @@ public class AppUtil {
     }
 
     public static void startSwipeActivity(Activity activity, Intent intent) {
-        startSwipeActivity(activity, intent, false);
+        startSwipeActivity(activity, intent, (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT));
     }
 
     public static void startSwipeActivity(Activity activity, Intent intent, boolean isFullScreen) {
+        LogUtil.d("isFullScreen " + isFullScreen);
         screenshots(activity, isFullScreen);
         activity.startActivity(intent);
     }
