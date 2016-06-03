@@ -267,8 +267,8 @@ public class AppUtil {
             //View是你需要截图的View
             View decorView = activity.getWindow().getDecorView();
             decorView.setDrawingCacheEnabled(true);
-            decorView.buildDrawingCache();
-            Bitmap b1 = decorView.getDrawingCache();
+//            decorView.buildDrawingCache();
+            Bitmap window = decorView.getDrawingCache();
             // 获取状态栏高度 /
             Rect frame = new Rect();
             activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
@@ -279,9 +279,9 @@ public class AppUtil {
             // 去掉标题栏 Remove the statusBar Height
             Bitmap bitmap;
             if (isFullScreen) {
-                bitmap = Bitmap.createBitmap(b1, 0, 0, width, height);
+                bitmap = Bitmap.createBitmap(window, 0, 0, width, height);
             } else {
-                bitmap = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
+                bitmap = Bitmap.createBitmap(window, 0, statusBarHeight, width, height - statusBarHeight);
             }
             decorView.destroyDrawingCache();
             FileOutputStream out = new FileOutputStream(getScreenshotFile());
