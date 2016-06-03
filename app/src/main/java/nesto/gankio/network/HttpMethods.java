@@ -23,6 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -112,11 +113,13 @@ public class HttpMethods {
         };
     }
 
-    public Subscription getData(Action1<Results> onNext, Action1<Throwable> onError, String type,
+    public Subscription getData(Action0 doOnSubscribe, Action1<Results> onNext, Action1<Throwable> onError, String type,
                                 Integer num, Integer page) {
         return networkService.getData(type, num, page)
                 .map(new HttpResultFunc<Results>())
                 .compose(this.<Results>setThreads())
+                .doOnSubscribe(doOnSubscribe)
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext, onError);
     }
 

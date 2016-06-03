@@ -27,6 +27,7 @@ import nesto.gankio.network.ErrorHandler;
 import nesto.gankio.network.ErrorHandlerHelper;
 import nesto.gankio.network.HttpMethods;
 import rx.Subscription;
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
@@ -145,8 +146,13 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void getData() {
-        isLoading = true;
-        swipeRefreshLayout.setRefreshing(true);
+        Action0 doOnSubscribe = new Action0() {
+            @Override
+            public void call() {
+                isLoading = true;
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        };
         Action1<Results> onNext = new Action1<Results>() {
             @Override
             public void call(Results results) {
@@ -163,9 +169,9 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 setRefreshFinished();
             }
         });
-        subscription = HttpMethods.getInstance().getData(onNext, onError, type.toString(), C.LOAD_NUM, ++pageNum);
+        subscription = HttpMethods.getInstance().getData(doOnSubscribe, onNext, onError, type.toString(), C.LOAD_NUM, ++pageNum);
     }
-    
+
     private void setRefreshFinished() {
         swipeRefreshLayout.setRefreshing(false);
         isLoading = false;
