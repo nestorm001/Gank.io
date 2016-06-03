@@ -303,7 +303,6 @@ public class AppUtil {
     }
 
     public static void startSwipeActivity(Activity activity, Intent intent, boolean isFullScreen) {
-        LogUtil.d("isFullScreen " + isFullScreen);
         screenshots(activity, isFullScreen);
         activity.startActivity(intent);
     }
