@@ -10,6 +10,6 @@
     <dimen name="title_height">30dp</dimen>
     <dimen name="icon_size">40dp</dimen>
 
-    <integer name="animation_current_length">200</integer>
+    <integer name="animation_current_length">350</integer>
     <integer name="animation_previous_length">200</integer>
 </resources>

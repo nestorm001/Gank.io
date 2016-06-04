@@ -103,7 +103,7 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
             // get real translation and time, the animation should be similar to {@anim/anim_exit_fade_in.xml}
             int translationX = (int) previousView.getTranslationX();
             translationX = translationX == 0 ? -X : translationX;
-            int duration = getResources().getInteger(R.integer.animation_current_length) *
+            int duration = getResources().getInteger(R.integer.animation_previous_length) *
                     (translationX / -X);
             startAnimation(previousView, translationX, 0, duration, 0);
         }
@@ -114,7 +114,7 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
         super.startActivity(intent);
         // the animation should be similar to {@anim/anim_enter_fade_out.xml}
         startAnimation(getWindow().getDecorView(), 0, -X,
-                getResources().getInteger(R.integer.animation_previous_length), 50);
+                getResources().getInteger(R.integer.animation_previous_length), 150);
     }
 
     // overridePendingTransition not work for windowIsTranslucent
