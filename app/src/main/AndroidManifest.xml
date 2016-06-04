@@ -28,12 +28,12 @@
             android:name=".ui.activity.content.ContentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.video.VideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.image_view.ImageViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -41,7 +41,8 @@
             android:label="image"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:taskAffinity="nesto.gankio.image">
+            android:taskAffinity="nesto.gankio.image"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
