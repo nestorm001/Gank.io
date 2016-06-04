@@ -1,5 +1,7 @@
 package nesto.gankio.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +10,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AccelerateInterpolator;
 
 import java.lang.reflect.Field;
 
@@ -100,9 +102,10 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
         if (previousView != null) {
             // get real translation and time, the animation should be similar to {@anim/anim_exit_fade_in.xml}
             int translationX = (int) previousView.getTranslationX();
+            translationX = translationX == 0 ? -X : translationX;
             int duration = getResources().getInteger(R.integer.animation_current_length) *
                     (translationX / -X);
-            startAnimation(previousView, translationX, 0, duration);
+            startAnimation(previousView, translationX, 0, duration, 0);
         }
     }
 
@@ -111,19 +114,27 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
         super.startActivity(intent);
         // the animation should be similar to {@anim/anim_enter_fade_out.xml}
         startAnimation(getWindow().getDecorView(), 0, -X,
-                getResources().getInteger(R.integer.animation_previous_length));
+                getResources().getInteger(R.integer.animation_previous_length), 50);
     }
 
     // overridePendingTransition not work for windowIsTranslucent
     // use animator to show transition animation
-    private void startAnimation(final View view, int start, int end, int duration) {
+    private void startAnimation(final View view, int start, int end, int duration, int delay) {
         ValueAnimator animator = ValueAnimator.ofInt(start, end);
         animator.setDuration(duration);
-        animator.setInterpolator(new LinearInterpolator());
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.setStartDelay(delay);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 view.setTranslationX((Integer) animation.getAnimatedValue());
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                view.setTranslationX(0);
             }
         });
         animator.start();
