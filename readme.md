@@ -19,9 +19,11 @@
 
 # TODO #
 * video player
+* 继续抄袭微信返回效果~~
 * 一堆想到还没想到的脑洞
 
 # Release
 * ~~[v0.1.0-beta ]()~~
 * [v0.1.1-beta ](https://github.com/nestorm001/Gank.io/releases/download/v0.1.1-beta/nesto.gankio_release_v0.1.1-beta_2016-05-31_nesto.apk)
 * [v0.1.2-beta ](https://github.com/nestorm001/Gank.io/releases/download/v0.1.2-beta/nesto.gankio_release_v0.1.2-beta_2016-06-02_nesto.apk)
+* [v0.1.3-beta ](https://github.com/nestorm001/Gank.io/releases/download/v0.1.3-beta/nesto.gankio_release_v0.1.3-beta_2016-06-04_nesto.apk)
