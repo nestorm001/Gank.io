@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Looper;
 import android.support.annotation.IntDef;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -34,7 +31,6 @@ import nesto.gankio.R;
 import nesto.gankio.global.A;
 import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
-import nesto.gankio.ui.activity.SwipeBackActivity;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -262,86 +258,5 @@ public class AppUtil {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
         out.close();
         return file;
-    }
-
-    public static void screenshots(Activity activity, boolean isFullScreen) {
-        //TODO not good enough
-        try {
-            //View是你需要截图的View
-            View decorView = activity.getWindow().getDecorView();
-            decorView.setDrawingCacheEnabled(true);
-//            decorView.buildDrawingCache();
-            Bitmap window = decorView.getDrawingCache();
-            // 获取屏幕长和高 Get screen width and height
-            int width = activity.getWindowManager().getDefaultDisplay().getWidth();
-            int height = activity.getWindowManager().getDefaultDisplay().getHeight();
-            // 去掉标题栏 Remove the statusBar Height
-            Bitmap bitmap;
-            if (isFullScreen) {
-                bitmap = Bitmap.createBitmap(window, 0, 0, width, height);
-            } else {
-                // 获取状态栏高度 /
-                Rect frame = new Rect();
-                activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-                int statusBarHeight = frame.top;
-                bitmap = Bitmap.createBitmap(window, 0, statusBarHeight, width, height - statusBarHeight);
-            }
-            decorView.destroyDrawingCache();
-            FileOutputStream out = new FileOutputStream(getScreenshotFile());
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static File getScreenshotFile() {
-        final String windowBitmap = "screenshots.jpg";
-        return new File(A.getContext().getCacheDir(), windowBitmap);
-    }
-
-    public static void startSwipeActivity(Activity activity, Intent intent) {
-        startSwipeActivity(activity, intent, (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT));
-    }
-
-    public static void startSwipeActivity(final Activity activity, final Intent intent, final boolean isFullScreen) {
-        Observable.create(new Observable.OnSubscribe<Class>() {
-            @Override
-            public void call(Subscriber<? super Class> subscriber) {
-                String className = intent.getComponent().getClassName();
-                if (className != null) {
-                    try {
-                        subscriber.onNext(Class.forName(className));
-                        subscriber.onCompleted();
-                    } catch (ClassNotFoundException e) {
-                        subscriber.onError(e);
-                    }
-                }
-            }
-        }).map(new Func1<Class, Boolean>() {
-            @Override
-            public Boolean call(Class activity) {
-                if (SwipeBackActivity.class.isAssignableFrom(activity)) {
-                    return true;
-                }
-                throw new RuntimeException("activity not instance of SwipeBackActivity");
-            }
-        }).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                activity.startActivity(intent);
-            }
-
-            @Override
-            public void onNext(Boolean b) {
-                screenshots(activity, isFullScreen);
-                activity.startActivity(intent);
-            }
-        });
     }
 }

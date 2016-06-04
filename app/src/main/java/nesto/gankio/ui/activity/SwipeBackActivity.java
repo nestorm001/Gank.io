@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import java.io.File;
 import java.lang.reflect.Field;
 
 import nesto.gankio.R;
 import nesto.gankio.util.AppUtil;
+import nesto.gankio.util.SwipeBackHelper;
 
 /**
  * Created on 2016/6/3.
@@ -26,7 +26,6 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
     private FrameLayout frameLayout;
     private ImageView behindImageView;
     private int defaultTranslationX = 100;
-    private int shadowWidth = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +42,7 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
             f_overHang.setAccessible(true);
             f_overHang.set(slidingPaneLayout, 0);
             slidingPaneLayout.setPanelSlideListener(this);
+            slidingPaneLayout.setShadowResourceLeft(R.drawable.shadow);
             slidingPaneLayout.setSliderFadeColor(getResources().getColor(R.color.Transparent));
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,33 +51,13 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
 
     private void setViews() {
         defaultTranslationX = AppUtil.dip2px(defaultTranslationX);
-        shadowWidth = AppUtil.dip2px(shadowWidth);
-        //behindFrameLayout
-        FrameLayout behindFrameLayout = new FrameLayout(this);
+        // put screenshot
         behindImageView = new ImageView(this);
-        behindImageView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        behindFrameLayout.addView(behindImageView, 0);
-
-        //containerLayout
-        LinearLayout containerLayout = new LinearLayout(this);
-        containerLayout.setOrientation(LinearLayout.HORIZONTAL);
-        containerLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        containerLayout.setLayoutParams(new ViewGroup.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() + shadowWidth, ViewGroup.LayoutParams.MATCH_PARENT));
-        //you view container
+        // put current activity
         frameLayout = new FrameLayout(this);
-        frameLayout.setBackgroundColor(getResources().getColor(android.R.color.white));
-        frameLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-
-        //add shadow
-        ImageView shadowImageView = new ImageView(this);
-        shadowImageView.setBackgroundResource(R.drawable.shadow);
-        shadowImageView.setLayoutParams(new LinearLayout.LayoutParams(shadowWidth, LinearLayout.LayoutParams.MATCH_PARENT));
-        containerLayout.addView(shadowImageView);
-        containerLayout.addView(frameLayout);
-        containerLayout.setTranslationX(-shadowWidth);
         //添加两个view
-        slidingPaneLayout.addView(behindFrameLayout, 0);
-        slidingPaneLayout.addView(containerLayout, 1);
+        slidingPaneLayout.addView(behindImageView, 0);
+        slidingPaneLayout.addView(frameLayout, 1);
     }
 
     @Override
@@ -89,7 +69,7 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
     public void setContentView(View v) {
         setContentView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         try {
-            behindImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//            behindImageView.setScaleType(ImageView.ScaleType.FIT_XY);
             behindImageView.setImageBitmap(getBitmap());
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,12 +97,11 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
 
     @Override
     public void onPanelSlide(View view, float v) {
-        //duang duang duang 你可以在这里加入很多特效
         behindImageView.setTranslationX(v * defaultTranslationX - defaultTranslationX);
     }
 
     private Bitmap getBitmap() {
-        File file = AppUtil.getScreenshotFile();
+        File file = SwipeBackHelper.getScreenshotFile();
         return BitmapFactory.decodeFile(file.getAbsolutePath());
     }
 }

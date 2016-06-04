@@ -30,6 +30,7 @@ import nesto.gankio.ui.activity.image_view.ImageViewActivity;
 import nesto.gankio.ui.fragment.normal.NormalFragment;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
+import nesto.gankio.util.SwipeBackHelper;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -64,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
                 public boolean onLongClick(View v) {
                     Intent intent = new Intent(context, ContentActivity.class)
                             .putExtra(Intents.TRANS_DATA, C.TITLE_DATA);
-                    AppUtil.startSwipeActivity((Activity) context, intent);
+                    SwipeBackHelper.startSwipeActivity((Activity) context, intent);
                     return true;
                 }
             });
@@ -152,7 +153,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.favourite:
-                AppUtil.startSwipeActivity(this, new Intent(this, FavouriteActivity.class));
+                SwipeBackHelper.startSwipeActivity(this, new Intent(this, FavouriteActivity.class));
                 break;
             case R.id.view_image:
                 if (isSucceed()) {

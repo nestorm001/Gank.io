@@ -20,6 +20,7 @@ import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.content.ContentActivity;
 import nesto.gankio.util.AppUtil;
+import nesto.gankio.util.SwipeBackHelper;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -129,7 +130,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 //TODO video player
 //                new Intent(context, VideoActivity.class).putExtra(Intents.TRANS_DATA, data) :
                 new Intent(context, ContentActivity.class).putExtra(Intents.TRANS_DATA, data);
-        AppUtil.startSwipeActivity((Activity) context, intent);
+        SwipeBackHelper.startSwipeActivity((Activity) context, intent);
     }
 
     protected void onFavouriteClicked(Data data, NormalViewHolder viewHolder, int position) {
