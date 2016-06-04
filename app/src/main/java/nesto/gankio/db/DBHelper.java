@@ -18,6 +18,7 @@ import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.LogUtil;
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -163,7 +164,9 @@ public class DBHelper {
                         } while (cursor.moveToNext());
                         return favouriteList;
                     }
-                }).first();
+                }).first()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private ContentValues makeData(int order, Data data) {
