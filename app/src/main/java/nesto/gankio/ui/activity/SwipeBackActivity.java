@@ -1,11 +1,14 @@
 package nesto.gankio.ui.activity;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 
 import java.lang.reflect.Field;
 
@@ -20,13 +23,18 @@ import nesto.gankio.util.SwipeBackHelper;
  */
 public abstract class SwipeBackActivity extends ActionBarActivity implements SlidingPaneLayout.PanelSlideListener {
     private SlidingPaneLayout slidingPaneLayout;
-    private int defaultTranslationX = 100;
+    private static final int X = AppUtil.dip2px(100);
+    private View previousView;
+    private Drawable shadow;
+    private boolean isFinished = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (isSupportSwipeBack() && SwipeBackHelper.getInstance().getPreviousActivity() != null) {
+        Activity previousActivity = SwipeBackHelper.getInstance().getPreviousActivity();
+        if (isSupportSwipeBack() && previousActivity != null) {
             setSlidingPaneLayout();
             setViews();
+            previousView = previousActivity.getWindow().getDecorView();
         }
         super.onCreate(savedInstanceState);
     }
@@ -46,8 +54,6 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
     }
 
     private void setViews() {
-        defaultTranslationX = AppUtil.dip2px(defaultTranslationX);
-
         View leftView = new View(this);
         leftView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         slidingPaneLayout.addView(leftView);
@@ -58,6 +64,8 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
         decor.removeView(decorChild);
         decor.addView(slidingPaneLayout);
         slidingPaneLayout.addView(decorChild);
+
+        shadow = getResources().getDrawable(R.drawable.shadow);
     }
 
     @Override
@@ -72,13 +80,13 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
 
     @Override
     public void onPanelSlide(View view, float v) {
-        Drawable shadow = getResources().getDrawable(R.drawable.shadow);
-        if (shadow != null) {
-            shadow.setAlpha((int) (255 - v * 255));
-            slidingPaneLayout.setShadowDrawableLeft(shadow);
+        if (!isFinished) {
+            if (shadow != null) {
+                shadow.setAlpha((int) (255 - v * 255));
+                slidingPaneLayout.setShadowDrawableLeft(shadow);
+            }
+            previousView.setTranslationX(v * X - X);
         }
-        Activity previousActivity = SwipeBackHelper.getInstance().getPreviousActivity();
-        previousActivity.getWindow().getDecorView().setTranslationX(v * defaultTranslationX - defaultTranslationX);
     }
 
     protected boolean isSupportSwipeBack() {
@@ -88,5 +96,36 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        isFinished = true;
+        if (previousView != null) {
+            // get real translation and time, the animation should be similar to {@anim/anim_exit_fade_in.xml}
+            int translationX = (int) previousView.getTranslationX();
+            int duration = getResources().getInteger(R.integer.animation_current_length) *
+                    (translationX / -X);
+            startAnimation(previousView, translationX, 0, duration);
+        }
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        // the animation should be similar to {@anim/anim_enter_fade_out.xml}
+        startAnimation(getWindow().getDecorView(), 0, -X,
+                getResources().getInteger(R.integer.animation_previous_length));
+    }
+
+    // overridePendingTransition not work for windowIsTranslucent
+    // use animator to show transition animation
+    private void startAnimation(final View view, int start, int end, int duration) {
+        ValueAnimator animator = ValueAnimator.ofInt(start, end);
+        animator.setDuration(duration);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                view.setTranslationX((Integer) animation.getAnimatedValue());
+            }
+        });
+        animator.start();
     }
 }

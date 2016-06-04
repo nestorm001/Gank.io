@@ -103,7 +103,6 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
 
 
     public void enterAnimation() {
-
         this.overridePendingTransition(R.anim.anim_enter_fade_in, R.anim.anim_enter_fade_out);
     }
 
@@ -114,7 +113,6 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     }
 
     public void exitAnimation() {
-        // FIXME not work for windowIsTranslucent
         this.overridePendingTransition(R.anim.anim_exit_fade_in, R.anim.anim_exit_fade_out);
     }
 
