@@ -43,7 +43,7 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
             f_overHang.setAccessible(true);
             f_overHang.set(slidingPaneLayout, 0);
             slidingPaneLayout.setPanelSlideListener(this);
-            slidingPaneLayout.setSliderFadeColor(getResources().getColor(android.R.color.transparent));
+            slidingPaneLayout.setSliderFadeColor(getResources().getColor(R.color.Transparent));
         } catch (Exception e) {
             e.printStackTrace();
         }
