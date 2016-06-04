@@ -61,6 +61,7 @@ public class FavouritePresenter extends Presenter<FavouriteMvpView> {
                             finishSubscribe(intent);
                         }
                     });
+            subscriptionList.add(subscription);
         }
     }
 
