@@ -16,13 +16,15 @@ import nesto.gankio.util.LogUtil;
 public class A extends Application {
     private static A instance;
     private Stack<Activity> activityStack;
+    private Stack<Activity> goBackStack;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
+        goBackStack = new Stack<>();
     }
-    
+
     public static A getInstance() {
         return instance;
     }
@@ -30,6 +32,26 @@ public class A extends Application {
     public static Context getContext() {
         return instance.getBaseContext();
     }
+
+
+    public Activity getPreviousActivity() {
+        if (!goBackStack.empty()) {
+            return goBackStack.peek();
+        } else {
+            return null;
+        }
+    }
+
+    public void removePreviousActivity() {
+        if (!goBackStack.empty()) {
+            goBackStack.pop();
+        }
+    }
+
+    public void addPreviousActivity(Activity activity) {
+        goBackStack.push(activity);
+    }
+
 
     /**
      * add Activity 添加Activity到栈

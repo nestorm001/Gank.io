@@ -1,20 +1,18 @@
 package nesto.gankio.ui.activity;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 
-import java.io.File;
 import java.lang.reflect.Field;
 
 import nesto.gankio.R;
+import nesto.gankio.global.A;
 import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.SwipeBackHelper;
+import nesto.gankio.util.LogUtil;
 
 /**
  * Created on 2016/6/3.
@@ -23,14 +21,15 @@ import nesto.gankio.util.SwipeBackHelper;
  */
 public abstract class SwipeBackActivity extends ActionBarActivity implements SlidingPaneLayout.PanelSlideListener {
     private SlidingPaneLayout slidingPaneLayout;
-    private FrameLayout frameLayout;
-    private ImageView behindImageView;
     private int defaultTranslationX = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setSlidingPaneLayout();
-        setViews();
+        if (isSupportSwipeBack() && A.getInstance().getPreviousActivity() != null) {
+            LogUtil.d("isSupportSwipeBack");
+            setSlidingPaneLayout();
+            setViews();
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -41,51 +40,31 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
             Field f_overHang = SlidingPaneLayout.class.getDeclaredField("mOverhangSize");
             f_overHang.setAccessible(true);
             f_overHang.set(slidingPaneLayout, 0);
-            slidingPaneLayout.setPanelSlideListener(this);
-            slidingPaneLayout.setShadowResourceLeft(R.drawable.shadow);
-            slidingPaneLayout.setSliderFadeColor(getResources().getColor(R.color.Transparent));
         } catch (Exception e) {
             e.printStackTrace();
         }
+        slidingPaneLayout.setPanelSlideListener(this);
+        slidingPaneLayout.setSliderFadeColor(getResources().getColor(R.color.Transparent));
     }
 
     private void setViews() {
         defaultTranslationX = AppUtil.dip2px(defaultTranslationX);
-        // put screenshot
-        behindImageView = new ImageView(this);
-        // put current activity
-        frameLayout = new FrameLayout(this);
-        //添加两个view
-        slidingPaneLayout.addView(behindImageView, 0);
-        slidingPaneLayout.addView(frameLayout, 1);
-    }
 
-    @Override
-    public void setContentView(int id) {
-        setContentView(getLayoutInflater().inflate(id, null));
-    }
+        View leftView = new View(this);
+        leftView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        slidingPaneLayout.addView(leftView);
 
-    @Override
-    public void setContentView(View v) {
-        setContentView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        try {
-            behindImageView.setImageBitmap(getBitmap());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ViewGroup decor = (ViewGroup) getWindow().getDecorView();
+        ViewGroup decorChild = (ViewGroup) decor.getChildAt(0);
+        decorChild.setBackgroundColor(getResources().getColor(android.R.color.white));
+        decor.removeView(decorChild);
+        decor.addView(slidingPaneLayout);
+        slidingPaneLayout.addView(decorChild);
     }
-
-    @Override
-    public void setContentView(View v, ViewGroup.LayoutParams params) {
-        super.setContentView(slidingPaneLayout, params);
-        frameLayout.removeAllViews();
-        frameLayout.addView(v, params);
-    }
-
 
     @Override
     public void onPanelClosed(View view) {
-
+        LogUtil.d("onPanelClosed");
     }
 
     @Override
@@ -96,15 +75,21 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
 
     @Override
     public void onPanelSlide(View view, float v) {
-        behindImageView.setTranslationX(v * defaultTranslationX - defaultTranslationX);
+        Drawable shadow = getResources().getDrawable(R.drawable.shadow);
+        if (shadow != null) {
+            shadow.setAlpha((int) (255 - v * 255));
+            slidingPaneLayout.setShadowDrawableLeft(shadow);
+        }
+        Activity previousActivity = A.getInstance().getPreviousActivity();
+        previousActivity.getWindow().getDecorView().setTranslationX(v * defaultTranslationX - defaultTranslationX);
     }
 
-    private Bitmap getBitmap() {
-        if (SwipeBackHelper.bitmap != null) {
-            return SwipeBackHelper.bitmap;
-        } else {
-            File file = SwipeBackHelper.getScreenshotFile();
-            return BitmapFactory.decodeFile(file.getAbsolutePath());
-        }
+    protected boolean isSupportSwipeBack() {
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

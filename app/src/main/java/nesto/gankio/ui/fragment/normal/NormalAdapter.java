@@ -1,6 +1,5 @@
 package nesto.gankio.ui.fragment.normal;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,6 @@ import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
 import nesto.gankio.ui.activity.content.ContentActivity;
 import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.SwipeBackHelper;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -130,7 +128,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 //TODO video player
 //                new Intent(context, VideoActivity.class).putExtra(Intents.TRANS_DATA, data) :
                 new Intent(context, ContentActivity.class).putExtra(Intents.TRANS_DATA, data);
-        SwipeBackHelper.startSwipeActivity((Activity) context, intent);
+        context.startActivity(intent);
     }
 
     protected void onFavouriteClicked(Data data, NormalViewHolder viewHolder, int position) {

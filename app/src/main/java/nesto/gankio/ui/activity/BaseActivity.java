@@ -80,6 +80,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     protected void onDestroy() {
         super.onDestroy();
         A.getInstance().finishActivity(this);
+        A.getInstance().removePreviousActivity();
     }
 
     @Override
@@ -95,10 +96,13 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
+        A.getInstance().addPreviousActivity(this);
         enterAnimation();
     }
 
+
     public void enterAnimation() {
+        LogUtil.d("enterAnimation");
         this.overridePendingTransition(R.anim.anim_enter_fade_in, R.anim.anim_enter_fade_out);
     }
 
@@ -109,6 +113,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     }
 
     public void exitAnimation() {
+        LogUtil.d("exitAnimation");
         this.overridePendingTransition(R.anim.anim_exit_fade_in, R.anim.anim_exit_fade_out);
     }
 
