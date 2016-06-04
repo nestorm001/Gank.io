@@ -25,6 +25,7 @@ import nesto.gankio.R;
 import nesto.gankio.global.A;
 import nesto.gankio.ui.MvpView;
 import nesto.gankio.util.LogUtil;
+import nesto.gankio.util.SwipeBackHelper;
 
 
 /**
@@ -80,7 +81,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     protected void onDestroy() {
         super.onDestroy();
         A.getInstance().finishActivity(this);
-        A.getInstance().removePreviousActivity();
+        SwipeBackHelper.getInstance().removePreviousActivity();
     }
 
     @Override
@@ -96,13 +97,13 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
-        A.getInstance().addPreviousActivity(this);
+        SwipeBackHelper.getInstance().addPreviousActivity(this);
         enterAnimation();
     }
 
 
     public void enterAnimation() {
-        LogUtil.d("enterAnimation");
+
         this.overridePendingTransition(R.anim.anim_enter_fade_in, R.anim.anim_enter_fade_out);
     }
 
@@ -113,7 +114,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
     }
 
     public void exitAnimation() {
-        LogUtil.d("exitAnimation");
+        // FIXME not work for windowIsTranslucent
         this.overridePendingTransition(R.anim.anim_exit_fade_in, R.anim.anim_exit_fade_out);
     }
 

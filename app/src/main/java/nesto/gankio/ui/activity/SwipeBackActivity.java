@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import java.lang.reflect.Field;
 
 import nesto.gankio.R;
-import nesto.gankio.global.A;
 import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.LogUtil;
+import nesto.gankio.util.SwipeBackHelper;
 
 /**
  * Created on 2016/6/3.
@@ -25,8 +24,7 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (isSupportSwipeBack() && A.getInstance().getPreviousActivity() != null) {
-            LogUtil.d("isSupportSwipeBack");
+        if (isSupportSwipeBack() && SwipeBackHelper.getInstance().getPreviousActivity() != null) {
             setSlidingPaneLayout();
             setViews();
         }
@@ -64,7 +62,6 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
 
     @Override
     public void onPanelClosed(View view) {
-        LogUtil.d("onPanelClosed");
     }
 
     @Override
@@ -80,7 +77,7 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
             shadow.setAlpha((int) (255 - v * 255));
             slidingPaneLayout.setShadowDrawableLeft(shadow);
         }
-        Activity previousActivity = A.getInstance().getPreviousActivity();
+        Activity previousActivity = SwipeBackHelper.getInstance().getPreviousActivity();
         previousActivity.getWindow().getDecorView().setTranslationX(v * defaultTranslationX - defaultTranslationX);
     }
 
