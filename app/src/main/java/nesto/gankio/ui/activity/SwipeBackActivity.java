@@ -69,7 +69,6 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
     public void setContentView(View v) {
         setContentView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         try {
-//            behindImageView.setScaleType(ImageView.ScaleType.FIT_XY);
             behindImageView.setImageBitmap(getBitmap());
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +100,11 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
     }
 
     private Bitmap getBitmap() {
-        File file = SwipeBackHelper.getScreenshotFile();
-        return BitmapFactory.decodeFile(file.getAbsolutePath());
+        if (SwipeBackHelper.bitmap != null) {
+            return SwipeBackHelper.bitmap;
+        } else {
+            File file = SwipeBackHelper.getScreenshotFile();
+            return BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
     }
 }

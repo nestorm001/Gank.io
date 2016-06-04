@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 import nesto.gankio.global.A;
@@ -23,35 +24,45 @@ import rx.functions.Func1;
  */
 public class SwipeBackHelper {
 
-//    public static Bitmap bitmap;
+    public static Bitmap bitmap;
 
     public static void screenshots(Activity activity, boolean isFullScreen) {
         //TODO not good enough
-        try {
-            //View是你需要截图的View
-            View decorView = activity.getWindow().getDecorView();
-            decorView.setDrawingCacheEnabled(true);
-            Bitmap window = decorView.getDrawingCache(true);
-            // 获取屏幕长和高 Get screen width and height
-            DisplayMetrics metric = new DisplayMetrics();
-            activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
-            int width = metric.widthPixels;
-            int height = metric.heightPixels;
-            Bitmap bitmap;
-            if (isFullScreen) {
-                bitmap = Bitmap.createBitmap(window, 0, 0, width, height);
-            } else {
-                Rect frame = new Rect();
-                activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-                int statusBarHeight = frame.top;
-                bitmap = Bitmap.createBitmap(window, 0, statusBarHeight, width, height - statusBarHeight);
-            }
-            decorView.destroyDrawingCache();
-            FileOutputStream out = new FileOutputStream(getScreenshotFile());
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        } catch (Exception e) {
-            e.printStackTrace();
+        //View是你需要截图的View
+        View decorView = activity.getWindow().getDecorView().getRootView();
+        decorView.buildDrawingCache();
+        decorView.setDrawingCacheEnabled(true);
+        Bitmap window = decorView.getDrawingCache();
+        // 获取屏幕长和高 Get screen width and height
+        DisplayMetrics metric = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int width = metric.widthPixels;
+        int height = metric.heightPixels;
+        if (isFullScreen) {
+            bitmap = Bitmap.createBitmap(window, 0, 0, width, height);
+        } else {
+            Rect frame = new Rect();
+            activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+            int statusBarHeight = frame.top;
+            bitmap = Bitmap.createBitmap(window, 0, statusBarHeight, width, height - statusBarHeight);
         }
+        decorView.destroyDrawingCache();
+        saveScreenshot();
+    }
+
+    private static void saveScreenshot() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileOutputStream out = null;
+                try {
+                    out = new FileOutputStream(getScreenshotFile());
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     public static File getScreenshotFile() {
