@@ -12,16 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 
-import java.lang.reflect.Field;
-
 import nesto.gankio.R;
+import nesto.gankio.ui.SwipeBackLayout;
 import nesto.gankio.util.AppUtil;
 import nesto.gankio.util.SwipeBackHelper;
 
 /**
  * Created on 2016/6/3.
  * By nesto
- * From https://github.com/bushijie/ParallaxSwipeBack
+ * edit from https://github.com/bushijie/ParallaxSwipeBack and so on
  */
 public abstract class SwipeBackActivity extends ActionBarActivity implements SlidingPaneLayout.PanelSlideListener {
     private SlidingPaneLayout slidingPaneLayout;
@@ -42,15 +41,7 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
     }
 
     private void setSlidingPaneLayout() {
-        //通过反射来改变SlidingPaneLayout的值
-        try {
-            slidingPaneLayout = new SlidingPaneLayout(this);
-            Field f_overHang = SlidingPaneLayout.class.getDeclaredField("mOverhangSize");
-            f_overHang.setAccessible(true);
-            f_overHang.set(slidingPaneLayout, 0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        slidingPaneLayout = new SwipeBackLayout(this);
         slidingPaneLayout.setPanelSlideListener(this);
         slidingPaneLayout.setSliderFadeColor(getResources().getColor(R.color.Transparent));
     }
@@ -83,11 +74,12 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
     @Override
     public void onPanelSlide(View view, float v) {
         if (!isFinished) {
+            float factor = 1 - v;
             if (shadow != null) {
-                shadow.setAlpha((int) (255 - v * 255));
+                shadow.setAlpha((int) (factor * 255));
                 slidingPaneLayout.setShadowDrawableLeft(shadow);
             }
-            previousView.setTranslationX(v * X - X);
+            previousView.setTranslationX(-factor * X);
         }
     }
 
