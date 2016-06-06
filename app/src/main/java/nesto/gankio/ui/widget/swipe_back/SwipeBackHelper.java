@@ -1,4 +1,4 @@
-package nesto.gankio.util;
+package nesto.gankio.ui.widget.swipe_back;
 
 import android.app.Activity;
 

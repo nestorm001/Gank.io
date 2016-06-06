@@ -1,4 +1,4 @@
-package nesto.gankio.ui.activity;
+package nesto.gankio.ui.widget.swipe_back;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -13,9 +13,8 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 
 import nesto.gankio.R;
-import nesto.gankio.ui.SwipeBackLayout;
+import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.util.AppUtil;
-import nesto.gankio.util.SwipeBackHelper;
 
 /**
  * Created on 2016/6/3.

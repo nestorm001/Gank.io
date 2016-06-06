@@ -22,7 +22,7 @@ import nesto.gankio.global.C;
 import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
-import nesto.gankio.ui.activity.SwipeBackActivity;
+import nesto.gankio.ui.widget.swipe_back.SwipeBackActivity;
 import nesto.gankio.ui.activity.content.ContentActivity;
 import nesto.gankio.ui.activity.favourite.FavouriteActivity;
 import nesto.gankio.ui.activity.image_view.ImageViewActivity;

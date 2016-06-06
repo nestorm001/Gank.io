@@ -2,7 +2,7 @@ package nesto.gankio.ui.activity.video;
 
 import android.os.Bundle;
 
-import nesto.gankio.ui.activity.SwipeBackActivity;
+import nesto.gankio.ui.widget.swipe_back.SwipeBackActivity;
 
 /**
  * Created on 2016/5/11.

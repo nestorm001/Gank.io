@@ -21,7 +21,7 @@ import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.model.Data;
-import nesto.gankio.ui.activity.SwipeBackActivity;
+import nesto.gankio.ui.widget.swipe_back.SwipeBackActivity;
 import nesto.gankio.ui.activity.main.MainActivity;
 import nesto.gankio.util.AppUtil;
 import rx.Subscriber;

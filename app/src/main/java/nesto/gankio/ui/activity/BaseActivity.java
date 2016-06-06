@@ -25,7 +25,7 @@ import nesto.gankio.R;
 import nesto.gankio.global.A;
 import nesto.gankio.ui.MvpView;
 import nesto.gankio.util.LogUtil;
-import nesto.gankio.util.SwipeBackHelper;
+import nesto.gankio.ui.widget.swipe_back.SwipeBackHelper;
 
 
 /**

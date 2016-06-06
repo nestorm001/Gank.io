@@ -1,4 +1,4 @@
-package nesto.gankio.ui;
+package nesto.gankio.ui.widget.swipe_back;
 
 import android.content.Context;
 import android.support.v4.widget.SlidingPaneLayout;
