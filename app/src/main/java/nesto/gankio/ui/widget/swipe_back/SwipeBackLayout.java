@@ -34,5 +34,4 @@ public class SwipeBackLayout extends SlidingPaneLayout {
         }
         return super.onInterceptTouchEvent(ev);
     }
-
 }
