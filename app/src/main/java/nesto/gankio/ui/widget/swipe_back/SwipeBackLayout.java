@@ -30,7 +30,7 @@ public class SwipeBackLayout extends SlidingPaneLayout {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         final int action = ev.getAction();
         if (action == MotionEvent.ACTION_DOWN) {
-            return ev.getX() < EDGE_SIZE;
+            return ev.getX() < EDGE_SIZE && super.onInterceptTouchEvent(ev);
         }
         return super.onInterceptTouchEvent(ev);
     }
