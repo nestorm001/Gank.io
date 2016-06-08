@@ -22,8 +22,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
-import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -42,23 +40,23 @@ public class FavouritePresenter extends Presenter<FavouriteMvpView> {
         } else {
             subscription = DBHelper.getInstance()
                     .getAll()
-                    .subscribe(new Action1<ArrayList<Data>>() {
+                    .subscribe(new Subscriber<ArrayList<Data>>() {
                         @Override
-                        public void call(ArrayList<Data> datas) {
-                            LogUtil.d("收藏夹加载完成");
+                        public void onCompleted() {
+                            finishSubscribe(intent);
                         }
-                    }, new Action1<Throwable>() {
+
                         @Override
-                        public void call(Throwable throwable) {
+                        public void onError(Throwable throwable) {
                             LogUtil.e(throwable.getLocalizedMessage());
                             if (throwable instanceof DBException && throwable.getMessage().equals("no result")) {
                                 finishSubscribe(intent);
                             }
                         }
-                    }, new Action0() {
+
                         @Override
-                        public void call() {
-                            finishSubscribe(intent);
+                        public void onNext(ArrayList<Data> datas) {
+                            LogUtil.d("收藏夹加载完成");
                         }
                     });
             subscriptionList.add(subscription);
