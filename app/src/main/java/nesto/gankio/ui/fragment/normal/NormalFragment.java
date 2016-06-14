@@ -173,7 +173,9 @@ public class NormalFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void setRefreshFinished() {
-        swipeRefreshLayout.setRefreshing(false);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
         isLoading = false;
         isNoData = false;
     }

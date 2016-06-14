@@ -1,0 +1,1 @@
+adb shell monkey -p nesto.gankio -v -v 10000 > ./monkey.txt
