@@ -32,7 +32,7 @@ import nesto.gankio.ui.widget.swipe_back.SwipeBackHelper;
  * Created on 2015/10/15 14:38
  */
 @SuppressWarnings("unused")
-public class BaseActivity extends AppCompatActivity implements MvpView {
+public abstract class BaseActivity extends AppCompatActivity implements MvpView {
 
     public static final int ANIMATION_DURATION = 500;
 

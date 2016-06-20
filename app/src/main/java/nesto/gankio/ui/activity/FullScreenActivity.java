@@ -6,7 +6,7 @@ import nesto.gankio.util.AppUtil;
  * Created on 2016/4/25.
  * By nesto
  */
-public class FullScreenActivity extends BaseActivity {
+public abstract class FullScreenActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
