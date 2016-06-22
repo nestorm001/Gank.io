@@ -58,6 +58,8 @@ public abstract class SwipeBackActivity extends ActionBarActivity implements Sli
         slidingPaneLayout.addView(decorChild);
 
         shadow = getResources().getDrawable(R.drawable.shadow);
+
+        //FIXME fitsSystemWindows problem
     }
 
     @Override

@@ -31,14 +31,14 @@ import butterknife.OnClick;
 import nesto.gankio.R;
 import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
-import nesto.gankio.ui.widget.swipe_back.SwipeBackActivity;
+import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.util.AppUtil;
 
 /**
  * Created on 2016/5/11.
  * By nesto
  */
-public class ContentActivity extends SwipeBackActivity implements ContentMvpView {
+public class ContentActivity extends ActionBarActivity implements ContentMvpView {
 
     @Bind(R.id.web_view)
     WebView webView;

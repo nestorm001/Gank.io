@@ -21,7 +21,7 @@ import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import nesto.gankio.R;
 import nesto.gankio.db.DBHelper;
 import nesto.gankio.model.Data;
-import nesto.gankio.ui.widget.swipe_back.SwipeBackActivity;
+import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.ui.activity.main.MainActivity;
 import nesto.gankio.util.AppUtil;
 import rx.Subscriber;
@@ -30,7 +30,7 @@ import rx.Subscriber;
  * Created on 2016/5/14.
  * By nesto
  */
-public class FavouriteActivity extends SwipeBackActivity
+public class FavouriteActivity extends ActionBarActivity
         implements FavouriteMvpView,
         FavouriteAdapter.OnDeleteListener {
 
