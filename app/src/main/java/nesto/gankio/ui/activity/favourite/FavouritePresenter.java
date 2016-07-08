@@ -86,8 +86,8 @@ public class FavouritePresenter extends Presenter<FavouriteMvpView> {
         String title = intent.getStringExtra(Intent.EXTRA_TITLE);
         String content = intent.getStringExtra(Intent.EXTRA_TEXT);
         LogUtil.d(content);
-        if (content.contains("http")) {
-            int position = content.indexOf("http");
+        if (content.toLowerCase().contains("http")) {
+            int position = content.toLowerCase().indexOf("http");
             title = (title == null || title.isEmpty()) ? content.substring(0, position) : title;
             String prefix = "分享";
             if (title.startsWith(prefix)) {
