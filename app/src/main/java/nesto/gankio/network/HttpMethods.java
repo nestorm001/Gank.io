@@ -39,6 +39,7 @@ public class HttpMethods {
     private static final int DEFAULT_TIMEOUT = 30;
 
     private NetworkService networkService;
+    private Gson gson;
 
     private HashMap<String, Subscription> requestList = new HashMap<>();
 
@@ -54,7 +55,7 @@ public class HttpMethods {
             httpClientBuilder.addInterceptor(logging);
         }
 
-        Gson gson = new GsonBuilder()
+        gson = new GsonBuilder()
                 .registerTypeAdapterFactory(MyAdapterFactory.create())
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .serializeNulls()
@@ -77,6 +78,11 @@ public class HttpMethods {
     //获取单例
     public static HttpMethods getInstance() {
         return SingletonHolder.INSTANCE;
+    }
+
+    //获取单例
+    public static Gson gson() {
+        return SingletonHolder.INSTANCE.gson;
     }
 
     /**

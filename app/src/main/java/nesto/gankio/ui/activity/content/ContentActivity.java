@@ -152,7 +152,7 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     }
 
     private void load() {
-        data = getIntent().getParcelableExtra(Intents.TRANS_DATA);
+        data = (Data) getIntent().getSerializableExtra(Intents.TRANS_DATA);
         if (data != null) {
             currentUrl = data.url();
             webView.loadUrl(data.url());

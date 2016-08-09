@@ -156,8 +156,7 @@ public class FavouriteActivity extends ActionBarActivity
 
     @Override
     public void addItem() {
-        adapter.notifyItemInserted(0);
-        adapter.notifyItemRangeChanged(1, adapter.getItemCount());
+        adapter.notifyDataSetChanged();
         recyclerView.smoothScrollToPosition(0);
     }
 

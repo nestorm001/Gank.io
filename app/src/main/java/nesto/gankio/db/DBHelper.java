@@ -33,7 +33,7 @@ public class DBHelper {
     private ArrayList<Data> favouriteList;
 
     private DBHelper() {
-        gson = new Gson();
+        gson = HttpMethods.gson();
         favouriteList = new ArrayList<>();
         db = SqlBrite.create().wrapDatabaseHelper(new SQLiteHelper(), Schedulers.io());
     }
