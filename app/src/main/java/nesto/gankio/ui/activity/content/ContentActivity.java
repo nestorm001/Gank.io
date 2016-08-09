@@ -154,9 +154,9 @@ public class ContentActivity extends ActionBarActivity implements ContentMvpView
     private void load() {
         data = getIntent().getParcelableExtra(Intents.TRANS_DATA);
         if (data != null) {
-            currentUrl = data.getUrl();
-            webView.loadUrl(data.getUrl());
-            setTitle(data.getType());
+            currentUrl = data.url();
+            webView.loadUrl(data.url());
+            setTitle(data.type());
         }
         presenter.getRandomPicture();
     }

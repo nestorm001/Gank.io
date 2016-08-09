@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 def releaseTime() {
     return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
@@ -69,6 +70,11 @@ android {
     productFlavors {
         nesto {}
     }
+
+    packagingOptions {
+        exclude 'META-INF/maven/com.google.code.gson/gson/pom.properties'
+        exclude 'META-INF/maven/com.google.code.gson/gson/pom.xml'
+    }
 }
 
 dependencies {
@@ -89,6 +95,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'jp.wasabeef:recyclerview-animators:2.2.3'
+    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.2'
+    apt 'com.ryanharter.auto.value:auto-value-gson:0.4.2'
 }
 
 repositories {

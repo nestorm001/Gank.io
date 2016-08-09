@@ -86,16 +86,16 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         viewHolder.image.setVisibility(View.GONE);
         data.setFavoured(DBHelper.getInstance().isExist(data));
         setFavourite(data, viewHolder);
-        if (data.getType().equals(DataType.BENEFIT.toString())) {
+        if (data.type().equals(DataType.BENEFIT.toString())) {
             viewHolder.image.setVisibility(View.VISIBLE);
             Picasso.with(context)
-                    .load(data.getUrl())
+                    .load(data.url())
                     .into(viewHolder.image);
         } else {
             viewHolder.title.setVisibility(View.VISIBLE);
             viewHolder.text.setVisibility(View.VISIBLE);
-            viewHolder.title.setText(data.getDesc());
-            viewHolder.text.setText(data.getWho());
+            viewHolder.title.setText(data.desc());
+            viewHolder.text.setText(data.who());
             viewHolder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -123,7 +123,7 @@ public class NormalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void onItemClicked(Data data) {
-        Intent intent = data.getType().equals(DataType.VIDEO.toString()) ?
+        Intent intent = data.type().equals(DataType.VIDEO.toString()) ?
                 new Intent(context, ContentActivity.class).putExtra(Intents.TRANS_DATA, data) :
                 //TODO video player
 //                new Intent(context, VideoActivity.class).putExtra(Intents.TRANS_DATA, data) :

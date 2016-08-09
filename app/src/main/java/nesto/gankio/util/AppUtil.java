@@ -173,7 +173,7 @@ public class AppUtil {
     }
 
     public static void onShareClicked(Data data, Context context) {
-        if (data.getType().equals(DataType.BENEFIT.toString())) {
+        if (data.type().equals(DataType.BENEFIT.toString())) {
             shareImage(data, context);
         } else {
             shareUrl(data, context);
@@ -183,14 +183,14 @@ public class AppUtil {
     private static void shareUrl(Data data, Context context) {
         Intent share = new Intent(Intent.ACTION_SEND)
                 //学习知乎，各种应用不接收title，所有内容全放在text里面
-                .putExtra(Intent.EXTRA_TEXT, data.getDesc() + " " + data.getUrl())
+                .putExtra(Intent.EXTRA_TEXT, data.desc() + " " + data.url())
                 .setType("text/html");
         context.startActivity(Intent.createChooser(share, context.getText(R.string.send_to)));
     }
 
 
     private static void shareImage(final Data data, final Context context) {
-        createBitmapObservable(data.getUrl(), context)
+        createBitmapObservable(data.url(), context)
                 .map(new Func1<Bitmap, Uri>() {
                     @Override
                     public Uri call(Bitmap bitmap) {

@@ -1,6 +1,6 @@
 # Update Log
 ## v0.1.5 (digging)
-> TODO
+> 使用google的auto
 
 ## v0.1.4
 > 仿微信返回基本搞定了

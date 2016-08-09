@@ -14,6 +14,7 @@ import nesto.gankio.BuildConfig;
 import nesto.gankio.global.Host;
 import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
+import nesto.gankio.model.MyAdapterFactory;
 import nesto.gankio.model.Results;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -54,6 +55,7 @@ public class HttpMethods {
         }
 
         Gson gson = new GsonBuilder()
+                .registerTypeAdapterFactory(MyAdapterFactory.create())
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .serializeNulls()
                 .create();
@@ -135,7 +137,7 @@ public class HttpMethods {
                     public String call(Results results) {
                         ArrayList<Data> datas = results.getResults();
                         if (!datas.isEmpty()) {
-                            return datas.get(new Random().nextInt(loadNum)).getUrl();
+                            return datas.get(new Random().nextInt(loadNum)).url();
                         }
                         return null;
                     }

@@ -93,11 +93,11 @@ public class DBHelper {
                 BriteDatabase.Transaction transaction = db.newTransaction();
                 try {
                     //ugly
-                    db.delete(C.FAVOURITE_TABLE, C.ID + " = '" + data.get_id() + "'");
+                    db.delete(C.FAVOURITE_TABLE, C.ID + " = '" + data._id() + "'");
                     for (int i = 0; i < start; i++) {
                         db.update(C.FAVOURITE_TABLE,
                                 makeData(end - 1 - i, favouriteList.get(i)),
-                                C.ID + " = '" + favouriteList.get(i).get_id() + "'");
+                                C.ID + " = '" + favouriteList.get(i)._id() + "'");
                     }
 //                    throw new RuntimeException("hehe");
                     transaction.markSuccessful();
@@ -129,7 +129,7 @@ public class DBHelper {
                     for (int i = start; i < end + 1; i++) {
                         db.update(C.FAVOURITE_TABLE,
                                 makeData(favouriteList.size() - i - 1, favouriteList.get(i)),
-                                C.ID + " = '" + favouriteList.get(i).get_id() + "'");
+                                C.ID + " = '" + favouriteList.get(i)._id() + "'");
                     }
 //                    throw new RuntimeException("hehe");
                     transaction.markSuccessful();
@@ -171,7 +171,7 @@ public class DBHelper {
 
     private ContentValues makeData(int order, Data data) {
         ContentValues values = new ContentValues();
-        values.put(C.ID, data.get_id());
+        values.put(C.ID, data._id());
         values.put(C.VALUE, toJson(data));
         values.put(C.ORDER, order);
         return values;

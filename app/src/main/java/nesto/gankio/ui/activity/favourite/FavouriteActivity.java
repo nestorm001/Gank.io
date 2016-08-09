@@ -176,8 +176,7 @@ public class FavouriteActivity extends ActionBarActivity
                 if (text != null) {
                     String title = text.getText().toString().trim();
                     if (!title.isEmpty()) {
-                        data.setDesc(text.getText().toString());
-                        presenter.addToFavourite(data);
+                        presenter.addToFavourite(data.withDesc(text.getText().toString()));
                     }
                 }
             }

@@ -104,7 +104,12 @@ public class FavouritePresenter extends Presenter<FavouriteMvpView> {
                 url = url.substring(0, url.indexOf(" "));
             }
             String id = Integer.toHexString(title.hashCode()) + Integer.toHexString(url.hashCode());
-            Data data = new Data(id, title, url, C.FROM_SHARE);
+            Data data = Data.builder()
+                    ._id(id)
+                    .desc(title)
+                    .url(url)
+                    .type(C.FROM_SHARE)
+                    .build();
             if (title.trim().isEmpty()) {
                 if (isViewStillAlive) {
                     view.showInputDialog(data);
@@ -157,7 +162,12 @@ public class FavouritePresenter extends Presenter<FavouriteMvpView> {
                     public void onNext(Uri uri) {
                         String id = Integer.toHexString(DataType.BENEFIT.toString().hashCode()) +
                                 Integer.toHexString(uri.toString().hashCode());
-                        Data data = new Data(id, "", uri.toString(), DataType.BENEFIT.toString());
+                        Data data = Data.builder()
+                                ._id(id)
+                                .desc("")
+                                .url(uri.toString())
+                                .type(DataType.BENEFIT.toString())
+                                .build();
                         addToFavourite(data);
                     }
                 });

@@ -9,6 +9,8 @@
 * com.squareup.picasso:picasso:2.5.2
 * com.squareup.sqlbrite:sqlbrite:0.6.3
 * jp.wasabeef:recyclerview-animators:2.2.3
+* com.google.auto.value:auto-value:1.2
+* com.ryanharter.auto.value:auto-value-gson:0.4.2
 
 # Issues To Fix #
 * ~~收藏偶尔会失败（似乎是因为unsubscribe调用太早）~~

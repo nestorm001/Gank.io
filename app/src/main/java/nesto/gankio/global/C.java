@@ -21,5 +21,10 @@ public class C {
     public static final String NESTO = "nesto";
     public static final String TYPE = "nesto";
     public static final String DESCRIPTION = "the repo of this app";
-    public static final Data TITLE_DATA = new Data(NESTO, DESCRIPTION, REPO_URL, TYPE);
+    public static final Data TITLE_DATA = Data.builder()
+            ._id(NESTO)
+            .desc(DESCRIPTION)
+            .url(REPO_URL)
+            .type(TYPE)
+            .build();
 }

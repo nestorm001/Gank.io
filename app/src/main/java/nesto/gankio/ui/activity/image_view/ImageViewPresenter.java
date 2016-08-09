@@ -33,7 +33,7 @@ public class ImageViewPresenter extends Presenter<ImageViewMvpView> {
                 @Override
                 public void call(Results results) {
                     for (Data data : results.getResults()) {
-                        urls.add(data.getUrl());
+                        urls.add(data.url());
                     }
                     show();
                 }
