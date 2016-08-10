@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.ViewParent;
 import android.view.WindowManager;
 
+import com.jude.swipbackhelper.SwipeBackHelper;
+
 import nesto.gankio.R;
 
 /**
@@ -26,6 +28,23 @@ public abstract class ActionBarActivity extends BaseActivity {
         setContentView();
         initActionBar();
         setTranslucentStatusBar(R.color.colorPrimaryDark);
+        SwipeBackHelper.onCreate(this);
+        SwipeBackHelper.getCurrentPage(this)
+                .setSwipeBackEnable(true)
+                .setSwipeRelateEnable(true)
+                .setSwipeRelateOffset(300);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SwipeBackHelper.onDestroy(this);
     }
 
     public abstract void setContentView();

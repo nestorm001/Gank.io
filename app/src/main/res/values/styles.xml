@@ -6,6 +6,22 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/Transparent</item>
+        <item name="android:windowAnimationStyle">@style/SlideAnimation</item>
+    </style>
+
+    <style name="SlideAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/anim_enter_fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_enter_fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_exit_fade_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim_exit_fade_out</item>
+        <item name="android:taskOpenEnterAnimation">@anim/anim_enter_fade_in</item>
+        <item name="android:taskOpenExitAnimation">@anim/anim_enter_fade_out</item>
+        <item name="android:taskCloseEnterAnimation">@anim/anim_exit_fade_in</item>
+        <item name="android:taskCloseExitAnimation">@anim/anim_exit_fade_out</item>
+        <item name="android:taskToFrontEnterAnimation">@anim/anim_enter_fade_in</item>
+        <item name="android:taskToFrontExitAnimation">@anim/anim_enter_fade_out</item>
+        <item name="android:taskToBackEnterAnimation">@anim/anim_exit_fade_in</item>
+        <item name="android:taskToBackExitAnimation">@anim/anim_exit_fade_out</item>
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base" />

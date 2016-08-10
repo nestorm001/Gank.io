@@ -11,6 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.jude.swipbackhelper.SwipeBackHelper;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,7 +24,7 @@ import nesto.gankio.global.C;
 import nesto.gankio.global.Intents;
 import nesto.gankio.model.Data;
 import nesto.gankio.model.DataType;
-import nesto.gankio.ui.widget.swipe_back.SwipeBackActivity;
+import nesto.gankio.ui.activity.ActionBarActivity;
 import nesto.gankio.ui.activity.content.ContentActivity;
 import nesto.gankio.ui.activity.favourite.FavouriteActivity;
 import nesto.gankio.ui.activity.image_view.ImageViewActivity;
@@ -34,7 +36,7 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 
 
-public class MainActivity extends SwipeBackActivity {
+public class MainActivity extends ActionBarActivity {
 
     @Bind(R.id.viewpager)
     ViewPager viewPager;
@@ -53,6 +55,8 @@ public class MainActivity extends SwipeBackActivity {
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         showAnimation();
+        SwipeBackHelper.getCurrentPage(this)
+                .setSwipeBackEnable(false);
     }
 
     private void setTitleLink() {
@@ -76,11 +80,6 @@ public class MainActivity extends SwipeBackActivity {
     public void setContentView() {
         setContentView(R.layout.activity_main);
         setTitleLink();
-    }
-
-    @Override
-    protected boolean isSupportSwipeBack() {
-        return false;
     }
 
     private void loadFavourite() {

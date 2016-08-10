@@ -25,7 +25,6 @@ import nesto.gankio.R;
 import nesto.gankio.global.A;
 import nesto.gankio.ui.MvpView;
 import nesto.gankio.util.LogUtil;
-import nesto.gankio.ui.widget.swipe_back.SwipeBackHelper;
 
 
 /**
@@ -81,7 +80,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     protected void onDestroy() {
         super.onDestroy();
         A.getInstance().finishActivity(this);
-        SwipeBackHelper.getInstance().removePreviousActivity();
+//        SwipeBackHelper.getInstance().removePreviousActivity();
     }
 
     @Override
@@ -97,7 +96,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
-        SwipeBackHelper.getInstance().addPreviousActivity(this);
+//        SwipeBackHelper.getInstance().addPreviousActivity(this);
         enterAnimation();
     }
 
